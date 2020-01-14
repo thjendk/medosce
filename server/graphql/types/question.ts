@@ -5,20 +5,20 @@ import QuestionParameters from 'models/questionParametersModel';
 export const typeDefs = gql`
   type Question {
     id: String
-    station: Station
     questionNumber: Int
     text: String
     parameters: [Parameter]
+  }
+
+  extend type Parameter {
+    value: String
+    point: Float
   }
 `;
 
 export const resolvers = {
   Question: {
     id: ({ id }) => id,
-    station: async ({ id }, _, ctx: Context) => {
-      const question = await ctx.questionsLoader.load(id);
-      return { id: question.stationId };
-    },
     questionNumber: async ({ id }, _, ctx: Context) => {
       const question = await ctx.questionsLoader.load(id);
       return question.questionNumber;
@@ -29,7 +29,11 @@ export const resolvers = {
     },
     parameters: async ({ id }, _, ctx: Context) => {
       const parameters = await QuestionParameters.query().where({ questionId: id });
-      return parameters.map((parameter) => ({ id: parameter.parameterId }));
+      return parameters.map((parameter) => ({
+        id: parameter.parameterId,
+        value: parameter.value,
+        point: parameter.point
+      }));
     }
   }
 };

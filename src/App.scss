@@ -1,5 +1,14 @@
 @import "~semantic-ui-css/semantic.min.css";
 
-.ui.segment {
-  margin: 2rem;
+.ui.container {
+  min-width: 60vw;
+}
+
+.ui {
+  &.menu.inverted.blue {
+    background-color: #004687 !important;
+  }
+  &.button.blue.basic {
+    border-color: #004687 !important;
+  }
 }

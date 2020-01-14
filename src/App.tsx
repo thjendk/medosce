@@ -7,6 +7,7 @@ import Logout from './components/auth/Logout';
 import Layout from 'components/layout/Layout';
 import User from 'classes/User';
 import './App.scss';
+import Quiz from 'components/Quiz/Quiz';
 
 export interface AppProps {}
 
@@ -30,6 +31,7 @@ const App: React.FC<AppProps> = () => {
           <Route path="/register" component={Register} />
           <Route path="/logout" component={Logout} />
           <Route path="/login" component={Login} />
+          <Route path="/quiz" component={Quiz} />
           <Route path="/" component={Frontpage} />
         </Switch>
       </Layout>

@@ -16,3 +16,13 @@ export const LargeText = styled.p`
     margin: 1em;
   }
 `;
+
+export const DetailText = styled.strong`
+  font-weight: normal;
+  color: ${(props) => props.color};
+`;
+
+export const Paragraph = styled.strong`
+  font-weight: normal;
+  color: ${(props) => props.color};
+`;

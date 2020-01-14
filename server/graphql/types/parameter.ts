@@ -1,11 +1,15 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
+import Parameters from 'models/parametersModel';
 
 export const typeDefs = gql`
   type Parameter {
     id: String
     name: String
-    category: Category
+  }
+
+  extend type Query {
+    parameters: [Parameter]
   }
 `;
 
@@ -15,10 +19,13 @@ export const resolvers = {
     name: async ({ id }, _, ctx: Context) => {
       const parameter = await ctx.parametersLoader.load(id);
       return parameter.name;
-    },
-    category: async ({ id }, _, ctx: Context) => {
-      const parameter = await ctx.parametersLoader.load(id);
-      return { id: parameter.categoryId };
+    }
+  },
+
+  Query: {
+    parameters: async () => {
+      const parameters = await Parameters.query().orderBy('name');
+      return parameters.map((parameter) => ({ id: parameter.parameterId }));
     }
   }
 };

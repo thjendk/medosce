@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import { MainLayout } from 'styles/layout';
+import { MainLayout, PageWrapper } from 'styles/layout';
 
 export interface LayoutProps {}
 
@@ -22,14 +22,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
       <MainLayout>
         <Header />
-        {children}
+        <PageWrapper>{children}</PageWrapper>
         <div style={{ flexGrow: 1 }} />
         <Footer />
       </MainLayout>
     );
   return (
     <Sidebar>
-      {children} <div style={{ flexGrow: 1 }} />
+      <PageWrapper>{children}</PageWrapper>
+      <div style={{ flexGrow: 1 }} />
       <Footer />
     </Sidebar>
   );
