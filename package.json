@@ -1,0 +1,90 @@
+{
+  "name": "thomas-typescript-boilerplate",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.0.0-beta.19",
+    "@apollo/react-hooks": "^3.1.3",
+    "@reduxjs/toolkit": "^1.2.1",
+    "apollo-boost": "^0.4.7",
+    "apollo-server-express": "^2.9.15",
+    "bcrypt": "^3.0.7",
+    "cookie-parser": "^1.4.4",
+    "dataloader": "^2.0.0",
+    "dotenv-flow": "^3.1.0",
+    "eslint-plugin-graphql": "^3.1.1",
+    "express": "^4.17.1",
+    "formik": "^2.1.1",
+    "graphql": "^14.5.8",
+    "helmet": "^3.21.2",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.20.7",
+    "lodash": "^4.17.15",
+    "mysql": "^2.17.1",
+    "node-sass": "^4.13.0",
+    "objection": "^2.0.10",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
+    "styled-components": "^4.4.1",
+    "ts-node": "^8.5.4",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.7.4"
+  },
+  "scripts": {
+    "start": "ts-node -P server/tsconfig.json -r tsconfig-paths/register build/server/server.js",
+    "dev": "npm-run-all --parallel server client",
+    "client": "react-scripts start",
+    "server": "nodemon",
+    "build": "npm-run-all --parallel build:*",
+    "test": "NODE_ENV=test jest --watchAll --verbose",
+    "test-coverage": "NODE_ENV=test jest --coverage",
+    "eject": "react-scripts eject",
+    "build:client": "react-scripts build",
+    "build:server": "tsc -p server/tsconfig.json",
+    "tsc": "tsc",
+    "postbuild": "cd server && npx knex migrate:latest"
+  },
+  "proxy": "http://localhost:3001",
+  "eslintConfig": {
+    "extends": "react-app",
+    "plugins": [
+      "graphql"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.4.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/bcrypt": "^3.0.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/dotenv-flow": "^3.0.0",
+    "@types/helmet": "0.0.45",
+    "@types/jest": "^24.0.25",
+    "@types/jsonwebtoken": "^8.3.5",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^12.12.24",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.5",
+    "@types/react-router-dom": "^5.1.3",
+    "@types/styled-components": "^4.4.2",
+    "npm-run-all": "^4.1.5"
+  }
+}
