@@ -33,10 +33,13 @@ const SubMenus: React.SFC<SubMenusProps> = ({ sidebarHide }) => {
           </Menu.Item>
         )}
         {user && (
-          <Menu.Item onClick={() => handleNavigation('/logout')}>
-            <Icon name="x" />
-            Logout
-          </Menu.Item>
+          <>
+            <Menu.Item>Velkommen {user.username.toTitleCase()}</Menu.Item>
+            <Menu.Item onClick={() => handleNavigation('/logout')}>
+              <Icon name="x" />
+              Logout
+            </Menu.Item>
+          </>
         )}
       </Menu.Menu>
     </>

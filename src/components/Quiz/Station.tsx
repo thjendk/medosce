@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
-import { Segment, Loader, Button, Divider } from 'semantic-ui-react';
+import { Segment, Loader } from 'semantic-ui-react';
 import { QuestionText } from 'styles/layout';
 import Question from './Question';
-import QuestionClass from 'classes/Question';
 
 export interface StationProps {}
 
@@ -14,18 +13,10 @@ const Station: React.SFC<StationProps> = () => {
   if (!item) return <Loader />;
   const { station, questionIndex } = item;
 
-  const handleNextQuestion = () => {
-    QuestionClass.nextQuestion(station.id);
-  };
-
   return (
     <div>
       <Segment>
         <QuestionText>{station.intro}</QuestionText>
-        <Divider hidden />
-        <Button fluid onClick={handleNextQuestion} basic color="blue">
-          Start
-        </Button>
       </Segment>
       {station.questions.map((question) =>
         question.questionNumber <= questionIndex ? (

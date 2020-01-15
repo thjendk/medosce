@@ -6,8 +6,8 @@ import Register from './components/auth/Register';
 import Logout from './components/auth/Logout';
 import Layout from 'components/layout/Layout';
 import User from 'classes/User';
-import './App.scss';
 import Quiz from 'components/Quiz/Quiz';
+import './App.scss';
 
 export interface AppProps {}
 

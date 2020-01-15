@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const MainLayout = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 export const PageWrapper = styled.div`
@@ -20,4 +20,8 @@ export const PageWrapper = styled.div`
 export const QuestionText = styled.div`
   font-size: 1.3em;
   color: ${(props) => props.color};
+`;
+
+export const StyledDivider = styled.div<{ small: boolean }>`
+  height: ${(props) => (props.small ? '5px' : '15px')};
 `;

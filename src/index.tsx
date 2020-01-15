@@ -15,6 +15,11 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV === 'production' ? false : true
 });
 
+/* eslint-disable-next-line */
+String.prototype.toTitleCase = function() {
+  return this[0].toUpperCase() + this.substring(1);
+};
+
 ReactDOM.render(
   <Provider store={store}>
     <ApolloProvider client={apolloClient}>

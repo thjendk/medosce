@@ -7,6 +7,7 @@ export const typeDefs = gql`
   type Category {
     id: ID
     name: String
+    iconName: String
     parameters: [Parameter]
   }
 
@@ -21,6 +22,10 @@ export const resolvers = {
     name: async ({ id }, _, ctx: Context) => {
       const category = await ctx.categoryLoader.load(id);
       return category.name;
+    },
+    iconName: async ({ id }, _, ctx: Context) => {
+      const category = await ctx.categoryLoader.load(id);
+      return category.iconName;
     },
     parameters: async ({ id }, _, ctx: Context) => {
       const parameters = await Parameters.query()

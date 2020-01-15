@@ -17,7 +17,7 @@ const quizReducer = createSlice({
   initialState,
   reducers: {
     setStations: (state, action: PayloadAction<Station[]>) => {
-      state.items = action.payload.map((station) => ({ station, questionIndex: 0 }));
+      state.items = action.payload.map((station) => ({ station, questionIndex: 1 }));
     },
     setCategories: (state, action: PayloadAction<Category[]>) => {
       state.categories = action.payload;

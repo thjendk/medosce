@@ -7,6 +7,7 @@ import quizReducer from 'redux/reducers/quiz';
 interface Category {
   id: string;
   name: string;
+  iconName: string;
   parameters: [Parameter];
 }
 
@@ -15,6 +16,7 @@ class Category {
     fragment Category on Category {
       id
       name
+      iconName
       parameters {
         id
         name
