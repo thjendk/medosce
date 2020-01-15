@@ -1,12 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
-import { List, Segment, Card } from 'semantic-ui-react';
+import { List, Card } from 'semantic-ui-react';
 
 export interface StationSummaryProps {}
 
 const StationSummary: React.SFC<StationSummaryProps> = () => {
-  const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
   const items = useSelector((state: ReduxState) => state.quiz.items);
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LargeText, CenterText } from 'styles/text';
+import { CenterText } from 'styles/text';
 import { Button } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ const Frontpage: React.FC<FrontpageProps> = () => {
 
   return (
     <CenterText>
-      <Button fluid basic color="blue" onClick={() => history.push('/demo')}>
+      <Button fluid basic color="blue" onClick={() => history.push('/quiz')}>
         Demo
       </Button>
     </CenterText>

@@ -1,10 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
-import { Segment } from 'semantic-ui-react';
-import { QuestionText } from 'styles/layout';
-import _ from 'lodash';
 import { Paragraph } from 'styles/text';
+import _ from 'lodash';
 
 export interface StationPointsProps {}
 
