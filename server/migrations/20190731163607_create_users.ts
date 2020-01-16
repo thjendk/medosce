@@ -8,6 +8,12 @@ export async function up(knex: Knex): Promise<any> {
       .unique();
     t.string('password').notNullable();
     t.string('email').unique();
+    t.integer('role_id')
+      .unsigned()
+      .defaultTo(2)
+      .references('roles.role_id')
+      .onDelete('cascade')
+      .onUpdate('cascade');
     t.timestamps(true, true);
   });
 }

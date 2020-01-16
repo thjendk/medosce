@@ -24,7 +24,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "mysql": "^2.17.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "objection": "^2.0.10",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

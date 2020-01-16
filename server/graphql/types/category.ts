@@ -14,6 +14,15 @@ export const typeDefs = gql`
   extend type Query {
     categories: [Category]
   }
+
+  extend type Mutation {
+    createCategory(data: CategoryInput): Category
+  }
+
+  input CategoryInput {
+    name: String
+    iconName: String
+  }
 `;
 
 export const resolvers = {
@@ -39,6 +48,13 @@ export const resolvers = {
     categories: async () => {
       const categories = await Categories.query().orderBy('name');
       return categories.map((category) => ({ id: category.categoryId }));
+    }
+  },
+
+  Mutation: {
+    createCategory: async (root, { data }) => {
+      const category = await Categories.query().insertAndFetch(data);
+      return { id: category.categoryId };
     }
   }
 };

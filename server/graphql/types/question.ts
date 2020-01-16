@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
 import QuestionParameters from 'models/questionParametersModel';
+import Questions from 'models/questionsModel';
 
 export const typeDefs = gql`
   type Question {
@@ -13,6 +14,16 @@ export const typeDefs = gql`
   extend type Parameter {
     value: String
     point: Float
+  }
+
+  extend type Mutation {
+    createQuestion(data: QuestionInput): Station
+  }
+
+  input QuestionInput {
+    stationId: String
+    text: String
+    questionNumber: Int
   }
 `;
 
@@ -34,6 +45,13 @@ export const resolvers = {
         value: parameter.value,
         point: parameter.point
       }));
+    }
+  },
+
+  Mutation: {
+    createQuestion: async (root, { data }) => {
+      const question = await Questions.query().insertAndFetch(data);
+      return { id: question.stationId };
     }
   }
 };

@@ -4,10 +4,6 @@ import Questions from 'models/questionsModel';
 import Stations from 'models/stationsModel';
 
 export const typeDefs = gql`
-  extend type Query {
-    stations(filter: StationFilterInput): [Station]
-  }
-
   type Station {
     id: String
     intro: String
@@ -17,8 +13,23 @@ export const typeDefs = gql`
     questions: [Question]
   }
 
+  extend type Query {
+    stations(filter: StationFilterInput): [Station]
+  }
+
   input StationFilterInput {
     examSetId: Int
+  }
+
+  extend type Mutation {
+    createStation(data: StationInput): Station
+  }
+
+  input StationInput {
+    intro: String
+    globalScore: Int
+    stationNumber: Int
+    examSetId: String
   }
 `;
 
@@ -52,5 +63,10 @@ export const resolvers = {
       const stations = await Stations.query();
       return stations.map((station) => ({ id: station.stationId }));
     }
+  },
+
+  Mutation: async (root, { data }) => {
+    const station = await Stations.query().insertAndFetch(data);
+    return { id: station.stationId };
   }
 };

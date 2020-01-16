@@ -7,7 +7,7 @@ interface User {
   userId: number;
   username: string;
   password: string;
-  role: string;
+  roleId: string;
   email: string;
   createdAt: Date;
   updatedAt: Date;
@@ -24,15 +24,6 @@ class User extends Model {
 
   $beforeUpdate() {
     this.updatedAt = new Date();
-  }
-
-  static async login(username: string, email: string) {
-    let user: User | undefined;
-    if (username) user = await User.query().findOne({ username: username });
-    if (email) user = await User.query().findOne({ email: email });
-    if (!user) throw new Error('Incorrect username or password');
-
-    return user;
   }
 
   verify(password: string) {

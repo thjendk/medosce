@@ -3,8 +3,8 @@ import { Model } from 'objection';
 interface Questions {
   questionId: string;
   stationId: string;
-  questionNumber: number;
   text: string;
+  questionNumber: number;
 }
 
 class Questions extends Model {

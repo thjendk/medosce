@@ -8,6 +8,8 @@ import Layout from 'components/layout/Layout';
 import User from 'classes/User';
 import Quiz from 'components/Quiz/Quiz';
 import './App.scss';
+import ProtectedRoute from 'components/auth/ProtectedRoute';
+import Admin from 'components/admin/Admin';
 
 export interface AppProps {}
 
@@ -28,6 +30,7 @@ const App: React.FC<AppProps> = () => {
       <Layout>
         <Switch>
           {fetching && <p>Loading...</p>}
+          <ProtectedRoute path="/admin" component={Admin} />
           <Route path="/register" component={Register} />
           <Route path="/logout" component={Logout} />
           <Route path="/login" component={Login} />

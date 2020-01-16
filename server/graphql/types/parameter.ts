@@ -11,6 +11,15 @@ export const typeDefs = gql`
   extend type Query {
     parameters: [Parameter]
   }
+
+  extend type Mutation {
+    createParameter(data: ParameterInput): Parameter
+  }
+
+  input ParameterInput {
+    name: String
+    categoryId: String
+  }
 `;
 
 export const resolvers = {
@@ -26,6 +35,13 @@ export const resolvers = {
     parameters: async () => {
       const parameters = await Parameters.query().orderBy('name');
       return parameters.map((parameter) => ({ id: parameter.parameterId }));
+    }
+  },
+
+  Mutation: {
+    createParameter: async (root, { data }) => {
+      const parameter = await Parameters.query().insertAndFetch(data);
+      return { id: parameter.parameterId };
     }
   }
 };

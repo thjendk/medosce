@@ -2,11 +2,13 @@ import Apollo from './Apollo';
 import { gql } from 'apollo-boost';
 import { store } from 'index';
 import authReducer from 'redux/reducers/auth';
+import Role from './Role';
 
 interface User {
   id: string;
   username: string;
   email: string;
+  role: Role;
 }
 
 interface UserInput {
@@ -26,6 +28,9 @@ class User {
           id
           username
           email
+          role {
+            id
+          }
         }
       }
     `;
@@ -38,13 +43,13 @@ class User {
    * Logges in a user, returns a JWT-token as cookie and as string
    */
   static login = async (data: UserInput) => {
-    const mutation = gql`
-      mutation($data: UserInput) {
+    const query = gql`
+      query($data: UserInput) {
         login(data: $data)
       }
     `;
 
-    await Apollo.mutate<string>('login', mutation, { data }); // JWT-Token
+    await Apollo.query<string>('login', query, { data }); // JWT-Token is stored in cookie
     await User.fetch();
   };
 
@@ -65,13 +70,13 @@ class User {
    * Logges a user out, by deleting the cookie, and removing from redux
    */
   static logout = async () => {
-    const mutation = gql`
-      mutation {
+    const query = gql`
+      query {
         logout
       }
     `;
 
-    await Apollo.mutate<string>('logout', mutation);
+    await Apollo.query<string>('logout', query);
     store.dispatch(authReducer.actions.logout());
   };
 }

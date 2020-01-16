@@ -3,20 +3,21 @@ import User from '../../models/userModel';
 import { Context } from 'config/apolloServer';
 
 export const typeDefs = gql`
-  extend type Query {
-    user: User
-  }
-
-  extend type Mutation {
-    createUser(data: UserInput): String
-    login(data: UserInput): String
-    logout: String
-  }
-
   type User {
     id: Int!
     username: String!
     email: String!
+    role: Role
+  }
+
+  extend type Query {
+    user: User
+    login(data: UserInput): String
+    logout: String
+  }
+
+  extend type Mutation {
+    createUser(data: UserInput): String
   }
 
   input UserInput {
@@ -27,31 +28,32 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {
+  User: {
+    id: ({ id }) => id,
+    username: async ({ id }, _, ctx: Context) => {
+      const user = await ctx.userLoader.load(id);
+      return user.username;
+    },
+    email: async ({ id }, _, ctx: Context) => {
+      const user = await ctx.userLoader.load(id);
+      return user.email;
+    },
+    role: async ({ id }, _, ctx: Context) => {
+      const user = await ctx.userLoader.load(id);
+      return { id: user.roleId };
+    }
+  },
+
   Query: {
     user: async (obj, args, ctx: Context, info) => {
       if (!ctx.user) return null;
 
       const user = await User.query().findById(ctx.user.userId);
       return { id: user?.userId };
-    }
-  },
-
-  Mutation: {
-    createUser: async (obj, { data }, ctx: Context, info) => {
-      const newUser = await User.query().insertAndFetch(data);
-
-      const token = newUser.signToken();
-      ctx.res.cookie('user', token);
-      return 'Created user and signed in';
     },
     login: async (obj, { data }, ctx: Context, info) => {
-      const { username, password, email } = data;
-      if (!password || (!username && !email)) {
-        throw new Error('You must provide username/email and password');
-      }
-
-      const user = await User.login(username, email);
-      const isValid = await user.verify(password);
+      const user = await User.query().findOne({ username: data.username });
+      const isValid = await user.verify(data.password);
 
       if (isValid) {
         const token = user.signToken();
@@ -66,17 +68,14 @@ export const resolvers = {
       return 'Logged out';
     }
   },
-  User: {
-    id: ({ id }) => id,
-    username: async ({ id }, _, ctx: Context) => {
-      const user = await ctx.userLoader.load(id);
-      if (!user) return null;
-      return user.username;
-    },
-    email: async ({ id }, _, ctx: Context) => {
-      const user = await ctx.userLoader.load(id);
-      if (!user) return null;
-      return user.email;
+
+  Mutation: {
+    createUser: async (obj, { data }, ctx: Context, info) => {
+      const newUser = await User.query().insertAndFetch(data);
+
+      const token = newUser.signToken();
+      ctx.res.cookie('user', token);
+      return 'Created user and signed in';
     }
   }
 };
