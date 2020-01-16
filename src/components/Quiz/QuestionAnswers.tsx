@@ -95,9 +95,9 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ question, station })
           <p>Du mangler {missingAnswersCount} værdier.</p>
         </div>
       )}
-
-      {items.length > 0 && <EuiInMemoryTable items={items} columns={columns} />}
       <Divider />
+      {items.length > 0 && <EuiInMemoryTable items={items} columns={columns} />}
+      <Divider hidden />
       {missingAnswersCount !== 0 && (
         <Button onClick={handleGiveUp} fluid basic color="red">
           Se manglende værdier
