@@ -3,6 +3,7 @@ import Station from 'classes/Station';
 import Category from 'classes/Category';
 import Parameter from 'classes/Parameter';
 import UserAnswer from 'classes/UserAnswer';
+import { insertOrReplace } from 'redux/misc/reduxFunctions';
 
 const initialState = {
   items: [] as { station: Station; questionIndex: number }[],
@@ -40,6 +41,12 @@ const quizReducer = createSlice({
     },
     addAnswer: (state, action: PayloadAction<UserAnswer>) => {
       state.answers.push(action.payload);
+    },
+    addParameter: (state, action: PayloadAction<Parameter>) => {
+      insertOrReplace(state.parameters, action.payload);
+    },
+    addCategory: (state, action: PayloadAction<Category>) => {
+      insertOrReplace(state.categories, action.payload);
     }
   }
 });

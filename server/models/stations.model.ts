@@ -10,7 +10,7 @@ interface Stations {
 
 class Stations extends Model {
   static tableName = 'stations';
-  static idColumn = 'station_id';
+  static idColumn = 'stationId';
 }
 
 export default Stations;

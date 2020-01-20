@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import Questions from 'models/questionsModel';
+import Questions from 'models/questions.model';
 
 const batchQuestions = async (ids: string[]) => {
   const questions = await Questions.query().findByIds(ids);

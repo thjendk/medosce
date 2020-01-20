@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<any> {
       .onUpdate('cascade');
     t.integer('question_number');
     t.text('text');
+    t.unique(['station_id', 'question_number']);
   });
 }
 

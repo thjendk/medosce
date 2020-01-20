@@ -1,17 +1,21 @@
 import React, { useEffect } from 'react';
-import { RouteComponentProps } from 'react-router';
 import User from 'classes/User';
+import { useHistory } from 'react-router-dom';
 
-export interface LogoutProps extends RouteComponentProps {}
+export interface LogoutProps {}
 
-const Logout: React.FC<LogoutProps> = ({ history }) => {
+const Logout: React.FC<LogoutProps> = () => {
+  const history = useHistory();
+
   useEffect(() => {
     const logout = async () => {
       await User.logout();
       history.push('/login');
     };
     logout();
-  }, [history]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return null;
 };

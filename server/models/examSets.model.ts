@@ -3,7 +3,7 @@ import { Model } from 'objection';
 interface ExamSets {
   examSetId: string;
   season: 'E' | 'F';
-  year: number;
+  year: string;
 }
 
 class ExamSets extends Model {

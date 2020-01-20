@@ -15,13 +15,19 @@ export interface QuestionProps {
 }
 
 const Question: React.SFC<QuestionProps> = ({ question, station }) => {
-  const categories = useSelector((state: ReduxState) => state.quiz.categories);
+  const categories = useSelector((state: ReduxState) =>
+    state.quiz.categories.filter((category) =>
+      category.questionTypes.some((type) =>
+        question.questionTypes.map((questionType) => questionType.id).includes(type.id)
+      )
+    )
+  );
   const answers = useSelector((state: ReduxState) =>
     state.quiz.answers.filter((answer) => answer.questionId === question.id)
   );
   const answerParameterIds = answers.map((answer) => answer.parameterId);
   const missingParameters = question.parameters.filter(
-    (parameter) => !answerParameterIds.includes(parameter.id)
+    (questionParameter) => !answerParameterIds.includes(questionParameter.parameter.id)
   );
   const missingAnswers = missingParameters.length;
 

@@ -1,10 +1,10 @@
 import { gql } from 'apollo-server-express';
-import User from '../../models/userModel';
+import User from '../../models/user.model';
 import { Context } from 'config/apolloServer';
 
 export const typeDefs = gql`
   type User {
-    id: Int!
+    id: ID
     username: String!
     email: String!
     role: Role
@@ -23,7 +23,7 @@ export const typeDefs = gql`
   input UserInput {
     username: String!
     password: String!
-    email: String!
+    email: String
   }
 `;
 
@@ -49,6 +49,10 @@ export const resolvers = {
       if (!ctx.user) return null;
 
       const user = await User.query().findById(ctx.user.userId);
+      if (!user) {
+        ctx.res.cookie('user', {}, { expires: new Date(0) });
+        return 'User not found';
+      }
       return { id: user?.userId };
     },
     login: async (obj, { data }, ctx: Context, info) => {
@@ -57,7 +61,7 @@ export const resolvers = {
 
       if (isValid) {
         const token = user.signToken();
-        ctx.res.cookie('user', token);
+        ctx.res.cookie('user', token, { expires: new Date(253402300000000) });
         return 'Signed in';
       } else {
         throw new Error('Incorrect username or password');
@@ -74,7 +78,7 @@ export const resolvers = {
       const newUser = await User.query().insertAndFetch(data);
 
       const token = newUser.signToken();
-      ctx.res.cookie('user', token);
+      ctx.res.cookie('user', token, { expires: new Date(253402300000000) });
       return 'Created user and signed in';
     }
   }

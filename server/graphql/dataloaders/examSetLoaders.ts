@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import ExamSets from 'models/examSetsModel';
+import ExamSets from 'models/examSets.model';
 
 const batchExamSets = async (ids: string[]) => {
   const examSets = await ExamSets.query().findByIds(ids);

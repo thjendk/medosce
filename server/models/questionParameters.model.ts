@@ -1,6 +1,7 @@
 import { Model } from 'objection';
 
 interface QuestionParameters {
+  questionParameterId: string;
   questionId: string;
   parameterId: string;
   value: string;
@@ -9,7 +10,7 @@ interface QuestionParameters {
 
 class QuestionParameters extends Model {
   static tableName = 'questionParameters';
-  static idColumn = ['questionId', 'parameterId'];
+  static idColumn = 'questionParameterId';
 }
 
 export default QuestionParameters;

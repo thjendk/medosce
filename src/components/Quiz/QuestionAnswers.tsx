@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Button, Icon } from 'semantic-ui-react';
-import Question from 'classes/Question';
+import Question, { QuestionParameter } from 'classes/Question';
 import { ReduxState } from 'redux/reducers';
 import { useSelector } from 'react-redux';
 import Station from 'classes/Station';
@@ -22,19 +22,21 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ question, station })
   const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
   const answerParameterIds = answers.map((answer) => answer.parameterId);
   const missingParameters = question.parameters.filter(
-    (parameter) => !answerParameterIds.includes(parameter.id)
+    (questionParameter) => !answerParameterIds.includes(questionParameter.parameter.id)
   );
   const missingAnswersCount = missingParameters.length;
   const items = answers.map((answer) => ({
     answer,
-    questionParameter: question.parameters.find((parameter) => parameter.id === answer.parameterId),
+    questionParameter: question.parameters.find(
+      (questionParameter) => questionParameter.parameter.id === answer.parameterId
+    ),
     parameter: parameters.find((parameter) => parameter.id === answer.parameterId)
   }));
 
   const handleGiveUp = () => {
     for (let missing of missingParameters) {
       Question.answer({
-        parameterId: missing.id,
+        parameterId: missing.parameter.id,
         giveUp: true,
         questionId: question.id,
         stationId: station.id
@@ -47,7 +49,7 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ question, station })
       name: 'Svar',
       render: (item: {
         parameter: Parameter;
-        questionParameter: Parameter;
+        questionParameter: QuestionParameter;
         answer: UserAnswer;
       }) => {
         if (!item.questionParameter)
@@ -71,14 +73,17 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ question, station })
     },
     {
       name: 'Detaljer',
-      render: (item: { parameter: Parameter; questionParameter: Parameter; answer: UserAnswer }) =>
-        item.questionParameter?.value
+      render: (item: {
+        parameter: Parameter;
+        questionParameter: QuestionParameter;
+        answer: UserAnswer;
+      }) => item.questionParameter?.value
     },
     {
       name: 'Point',
       render: (item: {
         parameter: Parameter;
-        questionParameter: Parameter;
+        questionParameter: QuestionParameter;
         answer: UserAnswer;
       }) => {
         if (!item.questionParameter) return 0;

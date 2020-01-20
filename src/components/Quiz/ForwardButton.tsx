@@ -10,10 +10,11 @@ export interface ForwardButtonProps {
 
 const ForwardButton: React.SFC<ForwardButtonProps> = ({ question }) => {
   const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
-  const item = useSelector((state: ReduxState) => state.quiz.items[stationIndex]);
-  const { station } = item;
+  const stations = useSelector((state: ReduxState) => state.quiz.items);
+  const { station } = stations[stationIndex];
   const questions = station.questions;
 
+  if (stationIndex + 1 === stations.length) return null;
   if (question.questionNumber === questions.length)
     return (
       <Button fluid color="green" basic>

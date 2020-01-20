@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 const secret = process.env.SECRET || '';
 
 interface User {
-  userId: number;
+  userId: string;
   username: string;
   password: string;
   roleId: string;
@@ -31,9 +31,9 @@ class User extends Model {
   }
 
   signToken() {
-    const { userId, username, email } = this;
+    const { userId, username, email, roleId } = this;
 
-    return jwt.sign({ userId, username, email }, secret);
+    return jwt.sign({ userId, username, email, roleId }, secret);
   }
 }
 
