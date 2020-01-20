@@ -165,7 +165,6 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ index }) => {
         <EuiButton
           color="text"
           size="s"
-          disabled={index < questionIndex}
           onClick={() =>
             handleGotIt({
               giveUp: !item.answer.giveUp,
