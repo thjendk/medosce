@@ -3,7 +3,7 @@ import { typeDefs, resolvers } from 'graphql/schema';
 import { generateLoaders } from 'graphql/dataloaders';
 import jwt from 'jsonwebtoken';
 import Express from 'express';
-import User from 'models/userModel';
+import User from 'models/user.model';
 const secret = process.env.SECRET || '';
 
 const getUserFromCookie = (req: Express.Request) => {

@@ -22,6 +22,6 @@ export const QuestionText = styled.div`
   color: ${(props) => props.color};
 `;
 
-export const StyledDivider = styled.div<{ small: boolean }>`
+export const StyledDivider = styled.div<{ small?: boolean }>`
   height: ${(props) => (props.small ? '5px' : '15px')};
 `;

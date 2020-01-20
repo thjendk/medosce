@@ -1,4 +1,4 @@
-import Stations from 'models/stationsModel';
+import Stations from 'models/stations.model';
 import DataLoader from 'dataloader';
 
 const batchStations = async (ids: string[]) => {

@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import Parameters from 'models/parametersModel';
+import Parameters from 'models/parameters.model';
 
 const batchParameters = async (ids: string[]) => {
   const parameters = await Parameters.query().findByIds(ids);

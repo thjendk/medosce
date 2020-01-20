@@ -10,7 +10,7 @@ const StationPoints: React.SFC<StationPointsProps> = () => {
   const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
   const item = useSelector((state: ReduxState) => state.quiz.items[stationIndex]);
   const answers = useSelector((state: ReduxState) =>
-    state.quiz.answers.filter((answer) => answer.stationId === item.station.id)
+    state.quiz.parameterAnswers.filter((answer) => answer.stationId === item.station.id)
   );
 
   const correct = answers.filter((answer) => !answer.giveUp);
@@ -22,7 +22,9 @@ const StationPoints: React.SFC<StationPointsProps> = () => {
       (answer) =>
         item.station.questions
           .find((question) => question.id === answer.questionId)
-          .parameters.find((parameter) => parameter.id === answer.parameterId)?.point
+          .parameters.find(
+            (questionParameter) => questionParameter.parameter.id === answer.parameterId
+          )?.point
     ) || 0;
   const gaveUpPoints =
     _.sumBy(
@@ -30,7 +32,9 @@ const StationPoints: React.SFC<StationPointsProps> = () => {
       (answer) =>
         item.station.questions
           .find((question) => question.id === answer.questionId)
-          .parameters.find((parameter) => parameter.id === answer.parameterId)?.point
+          .parameters.find(
+            (questionParameter) => questionParameter.parameter.id === answer.parameterId
+          )?.point
     ) || 0;
 
   return (

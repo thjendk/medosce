@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import Categories from 'models/categoriesModel';
+import Categories from 'models/categories.model';
 
 const batchCategories = async (ids: string[]) => {
   const categories = await Categories.query().findByIds(ids);

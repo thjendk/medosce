@@ -11,6 +11,7 @@ export async function up(knex: Knex): Promise<any> {
       .references('exam_sets.exam_set_id')
       .onDelete('cascade')
       .onDelete('cascade');
+    t.unique(['station_number', 'exam_set_id']);
   });
 }
 

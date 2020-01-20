@@ -40,7 +40,7 @@ class User {
   };
 
   /**
-   * Logges in a user, returns a JWT-token as cookie and as string
+   * Logges in a user, returns a JWT-token as cookie
    */
   static login = async (data: UserInput) => {
     const query = gql`
@@ -54,7 +54,7 @@ class User {
   };
 
   /**
-   * Creates user, and logges the user in. Returns a JWT-token as cookie and as string.
+   * Creates user, and logges the user in. Returns a JWT-token as cookie.
    */
   static createUser = async (data: UserInput) => {
     const mutation = gql`

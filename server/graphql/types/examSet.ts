@@ -1,12 +1,14 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
-import ExamSets from 'models/examSetsModel';
+import ExamSets from 'models/examSets.model';
+import Stations from 'models/stations.model';
 
 export const typeDefs = gql`
   type ExamSet {
     id: ID
     season: String
     year: Int
+    stations: [Station]
   }
 
   extend type Query {
@@ -19,7 +21,7 @@ export const typeDefs = gql`
 
   input ExamSetInput {
     season: String
-    year: Int
+    year: String
   }
 `;
 
@@ -33,6 +35,10 @@ export const resolvers = {
     year: async ({ id }, _, ctx: Context) => {
       const examSet = await ctx.examSetLoader.load(id);
       return examSet.year;
+    },
+    stations: async ({ id }, _, ctx: Context) => {
+      const stations = await Stations.query().where({ examSetId: id });
+      return stations.map((station) => ({ id: station.stationId }));
     }
   },
 
@@ -44,7 +50,8 @@ export const resolvers = {
   },
 
   Mutation: {
-    createExamSet: async (root, { data }) => {
+    createExamSet: async (root, { data }, ctx: Context) => {
+      if (ctx.user?.roleId !== (1 as any)) throw new Error('Not permitted');
       const examSet = await ExamSets.query().insertAndFetch(data);
       return { id: examSet.examSetId };
     }

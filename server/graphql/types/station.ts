@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
-import Questions from 'models/questionsModel';
-import Stations from 'models/stationsModel';
+import Questions from 'models/questions.model';
+import Stations from 'models/stations.model';
 
 export const typeDefs = gql`
   type Station {
@@ -65,8 +65,10 @@ export const resolvers = {
     }
   },
 
-  Mutation: async (root, { data }) => {
-    const station = await Stations.query().insertAndFetch(data);
-    return { id: station.stationId };
+  Mutation: {
+    createStation: async (root, { data }) => {
+      const station = await Stations.query().insertAndFetch(data);
+      return { id: station.stationId };
+    }
   }
 };

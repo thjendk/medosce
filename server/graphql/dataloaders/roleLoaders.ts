@@ -1,4 +1,4 @@
-import Role from 'models/roleModel';
+import Role from 'models/role.model';
 import DataLoader from 'dataloader';
 
 const batchRoles = async (ids: string[]) => {

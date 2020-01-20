@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Segment, Form, Divider, Message } from 'semantic-ui-react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Formik, FormikValues } from 'formik';
 import User from 'classes/User';
 import { Button } from 'semantic-ui-react';
@@ -9,7 +9,6 @@ export interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
   const history = useHistory();
-  const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -22,11 +21,10 @@ const Login: React.FC<LoginProps> = () => {
     try {
       setLoginLoading(true);
       await User.login({ username, password, email });
-      if (location.state.from) return history.push(location.state.from);
-      return history.push('/');
+      history.push('/');
     } catch (err) {
       setLoginLoading(false);
-      return setErrorMessage('User not found');
+      setErrorMessage('User not found');
     }
   };
 

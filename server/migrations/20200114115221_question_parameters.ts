@@ -2,6 +2,7 @@ import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable('question_parameters', (t) => {
+    t.increments('question_parameter_id');
     t.integer('question_id')
       .unsigned()
       .references('questions.question_id')
@@ -13,8 +14,7 @@ export async function up(knex: Knex): Promise<any> {
       .onDelete('cascade')
       .onDelete('cascade');
     t.text('value');
-    t.integer('point');
-    t.primary(['question_id', 'parameter_id']);
+    t.float('point');
   });
 }
 
