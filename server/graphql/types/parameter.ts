@@ -51,13 +51,26 @@ export const resolvers = {
       return { id: parameter.parameterId };
     },
     updateParameter: async (root, { id, data }) => {
+      // Find parameter
       const parameter = await Parameters.query().findById(id);
       if (!parameter) throw new Error('Parameter not found');
-      const joins = data.categoryIds.map((categoryId) => ({ parameterId: id, categoryId }));
-      await ParametersCategories.query().insertGraph(joins);
-      delete data.categoryIds;
-      const updatedParameter = await parameter.$query().updateAndFetch(data);
-      return { id: updatedParameter.parameterId };
+
+      // Joins
+      if (data.categoryIds) {
+        const joins = data.categoryIds.map((categoryId) => ({ parameterId: id, categoryId }));
+        await ParametersCategories.query()
+          .where({ parameterId: parameter.parameterId })
+          .delete();
+        await ParametersCategories.query().insertGraph(joins);
+        delete data.categoryIds;
+      }
+
+      // Update parameter without joins
+      await parameter
+        .$query()
+        .updateAndFetch(data)
+        .skipUndefined();
+      return { id: parameter.parameterId };
     }
   }
 };

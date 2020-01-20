@@ -4,7 +4,7 @@ import { ReduxState } from 'redux/reducers';
 import { EuiHighlight, EuiFieldText, EuiComboBox, EuiInMemoryTable } from '@elastic/eui';
 import ParameterForm from './forms/ParameterForm';
 import { Divider } from 'semantic-ui-react';
-import Category from 'classes/Category';
+import Parameter from 'classes/Parameter';
 
 export interface AdminParametersProps {}
 
@@ -13,8 +13,9 @@ const AdminParameters: React.SFC<AdminParametersProps> = () => {
   const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
   const categories = useSelector((state: ReduxState) => state.quiz.categories);
 
-  const handleChange = (e) => {
-    console.log(e);
+  const handleChange = (id, options) => {
+    const ids = options.map((option) => option.value);
+    Parameter.update(id, { categoryIds: ids });
   };
 
   const categoryOptions = categories.map((category) => ({
@@ -33,15 +34,14 @@ const AdminParameters: React.SFC<AdminParametersProps> = () => {
     },
     {
       name: 'Categories',
-      field: 'categories',
-      render: (categories: Category[]) => (
+      render: (parameter: Parameter) => (
         <EuiComboBox
-          selectedOptions={categories.map((category) => ({
+          selectedOptions={parameter.categories.map((category) => ({
             label: category.name,
             value: category.id
           }))}
           options={categoryOptions}
-          onChange={handleChange}
+          onChange={(e) => handleChange(parameter.id, e)}
         />
       )
     }

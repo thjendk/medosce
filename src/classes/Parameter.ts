@@ -68,13 +68,14 @@ class Parameter {
     return store.dispatch(quizReducer.actions.addParameter(parameter));
   };
 
-  static update = async (id: String, data: ParameterInput) => {
+  static update = async (id: String, data: Partial<ParameterInput>) => {
     const mutation = gql`
-      mutation($id: String, data: ParameterInput) {
+      mutation($id: String, $data: ParameterInput) {
         updateParameter(id: $id, data: $data) {
           ...Parameter
         }
-      } ${Parameter.fragment}
+      }
+      ${Parameter.fragment}
     `;
 
     const parameter = await Apollo.mutate<Parameter>('updateParameter', mutation, { id, data });
