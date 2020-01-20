@@ -1,6 +1,6 @@
 import React from 'react';
 import { EuiFlexGroup, EuiFlexItem, EuiStat } from '@elastic/eui';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
 import Routes from 'classes/Routes';
@@ -9,6 +9,7 @@ export interface AdminStatsProps {}
 
 const AdminStats: React.SFC<AdminStatsProps> = () => {
   const history = useHistory();
+  const location = useLocation();
   const { examSets, stations, questions } = useSelector((state: ReduxState) => state.admin);
   const { parameters, categories } = useSelector((state: ReduxState) => state.quiz);
 

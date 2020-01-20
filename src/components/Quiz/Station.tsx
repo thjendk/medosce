@@ -11,18 +11,16 @@ const Station: React.SFC<StationProps> = () => {
   const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
   const item = useSelector((state: ReduxState) => state.quiz.items[stationIndex]);
   if (!item) return <Loader />;
-  const { station, questionIndex } = item;
+  const { station } = item;
 
   return (
     <div>
       <Segment>
         <QuestionText>{station.intro}</QuestionText>
       </Segment>
-      {station.questions.map((question) =>
-        question.questionNumber <= questionIndex ? (
-          <Question station={station} question={question} />
-        ) : null
-      )}
+      {station.questions.map((question, i) => (
+        <Question index={i} />
+      ))}
     </div>
   );
 };

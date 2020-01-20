@@ -27,6 +27,7 @@ export const typeDefs = gql`
 
   extend type Mutation {
     createQuestion(data: QuestionInput): Question
+    updateQuestion(id: String, data: QuestionInput): Question
     createQuestionParameter(data: QuestionParameterInput): Question
     deleteQuestionParameter(id: String): Question
   }
@@ -35,6 +36,7 @@ export const typeDefs = gql`
     stationId: String
     text: String
     questionNumber: Int
+    questionTypeIds: [String]
   }
 
   input QuestionParameterInput {
@@ -85,6 +87,21 @@ export const resolvers = {
   Mutation: {
     createQuestion: async (root, { data }) => {
       const question = await Questions.query().insertAndFetch(data);
+      return { id: question.questionId };
+    },
+    updateQuestion: async (root, { id, data }) => {
+      // Find question
+      const question = await Questions.query().findById(id);
+      if (!question) throw new Error('Question not found');
+
+      // Joins
+      if (data.questionTypeIds) {
+        await QuestionsQuestionType.updateRelations(question.questionId, data.questionTypeIds);
+        delete data.questionTypeIds;
+      }
+
+      // Update rest
+      await question.$query().update(data);
       return { id: question.questionId };
     },
     createQuestionParameter: async (root, { data }) => {

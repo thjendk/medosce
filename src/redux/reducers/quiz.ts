@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Station from 'classes/Station';
 import Category from 'classes/Category';
 import Parameter from 'classes/Parameter';
-import UserAnswer from 'classes/UserAnswer';
+import ParameterAnswer from 'classes/ParameterAnswer';
 import { insertOrReplace } from 'redux/misc/reduxFunctions';
 
 const initialState = {
@@ -10,7 +10,7 @@ const initialState = {
   categories: [] as Category[],
   parameters: [] as Parameter[],
   stationIndex: 0,
-  answers: [] as UserAnswer[]
+  parameterAnswers: [] as ParameterAnswer[]
 };
 
 const quizReducer = createSlice({
@@ -18,7 +18,7 @@ const quizReducer = createSlice({
   initialState,
   reducers: {
     setStations: (state, action: PayloadAction<Station[]>) => {
-      state.items = action.payload.map((station) => ({ station, questionIndex: 1 }));
+      state.items = action.payload.map((station) => ({ station, questionIndex: 0 }));
     },
     setCategories: (state, action: PayloadAction<Category[]>) => {
       state.categories = action.payload;
@@ -39,8 +39,17 @@ const quizReducer = createSlice({
     setParameters: (state, action: PayloadAction<Parameter[]>) => {
       state.parameters = action.payload;
     },
-    addAnswer: (state, action: PayloadAction<UserAnswer>) => {
-      state.answers.push(action.payload);
+    addParameterAnswer: (state, action: PayloadAction<ParameterAnswer>) => {
+      const index = state.parameterAnswers.findIndex(
+        (parameterAnswer) =>
+          parameterAnswer.parameterId === action.payload.parameterId &&
+          parameterAnswer.questionId === action.payload.questionId
+      );
+      if (index === -1) {
+        state.parameterAnswers.push(action.payload);
+      } else {
+        state.parameterAnswers[index] = action.payload;
+      }
     },
     addParameter: (state, action: PayloadAction<Parameter>) => {
       insertOrReplace(state.parameters, action.payload);

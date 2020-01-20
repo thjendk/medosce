@@ -25,7 +25,8 @@ const AdminParameters: React.SFC<AdminParametersProps> = () => {
   const columns = [
     {
       field: 'id',
-      name: 'ID'
+      name: 'ID',
+      sortable: true
     },
     {
       field: 'name',
@@ -58,7 +59,7 @@ const AdminParameters: React.SFC<AdminParametersProps> = () => {
           parameter.name.toLowerCase().includes(search.toLowerCase())
         )}
         columns={columns}
-        pagination
+        sorting
       />
       <Divider />
       <ParameterForm />

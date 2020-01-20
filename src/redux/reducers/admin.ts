@@ -3,11 +3,13 @@ import ExamSet from 'classes/ExamSet';
 import { insertOrReplace } from 'redux/misc/reduxFunctions';
 import Station from 'classes/Station';
 import Question from 'classes/Question';
+import QuestionType from 'classes/QuestionType';
 
 const initialState = {
   examSets: [] as ExamSet[],
   stations: [] as Station[],
-  questions: [] as Question[]
+  questions: [] as Question[],
+  questionTypes: [] as QuestionType[]
 };
 
 const adminReducer = createSlice({
@@ -31,6 +33,9 @@ const adminReducer = createSlice({
     },
     addQuestion: (state, action: PayloadAction<Question>) => {
       insertOrReplace(state.questions, action.payload);
+    },
+    setQuestionTypes: (state, action: PayloadAction<QuestionType[]>) => {
+      state.questionTypes = action.payload;
     }
   }
 });

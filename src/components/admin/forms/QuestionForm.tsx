@@ -18,7 +18,7 @@ const QuestionForm: React.SFC<QuestionFormProps> = ({ stationId }) => {
     onSubmit: (values) => handleSubmit(values)
   });
 
-  const handleSubmit = async (data: QuestionInput) => {
+  const handleSubmit = async (data: Partial<QuestionInput>) => {
     await Question.create(data);
     formik.resetForm();
   };

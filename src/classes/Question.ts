@@ -1,7 +1,7 @@
 import Parameter from './Parameter';
 import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
-import UserAnswer from './UserAnswer';
+import ParameterAnswer from './ParameterAnswer';
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
 import adminReducer from 'redux/reducers/admin';
@@ -28,6 +28,7 @@ export interface QuestionInput {
   stationId: string;
   text: string;
   questionNumber: number;
+  questionTypeIds: string[];
 }
 
 export interface QuestionParameterInput {
@@ -80,11 +81,7 @@ class Question {
     );
   };
 
-  static answer = (parameterId: UserAnswer) => {
-    store.dispatch(quizReducer.actions.addAnswer(parameterId));
-  };
-
-  static create = async (data: QuestionInput) => {
+  static create = async (data: Partial<QuestionInput>) => {
     const mutation = gql`
       mutation($data: QuestionInput) {
         createQuestion(data: $data) {
@@ -95,6 +92,20 @@ class Question {
     `;
 
     const question = await Apollo.mutate<Question>('createQuestion', mutation, { data });
+    return store.dispatch(adminReducer.actions.addQuestion(question));
+  };
+
+  static update = async (id: Question['id'], data: Partial<QuestionInput>) => {
+    const mutation = gql`
+      mutation($id: String, $data: QuestionInput) {
+        updateQuestion(id: $id, data: $data) {
+          ...Question
+        }
+      }
+      ${Question.fragment}
+    `;
+
+    const question = await Apollo.mutate<Question>('updateQuestion', mutation, { id, data });
     return store.dispatch(adminReducer.actions.addQuestion(question));
   };
 

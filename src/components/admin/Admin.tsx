@@ -9,6 +9,7 @@ import Routes from 'classes/Routes';
 import Parameter from 'classes/Parameter';
 import Category from 'classes/Category';
 import AdminStats from './AdminStats';
+import QuestionType from 'classes/QuestionType';
 
 export interface AdminProps {}
 
@@ -22,6 +23,7 @@ const Admin: React.SFC<AdminProps> = () => {
       await Question.fetchAll();
       await Category.fetchAll();
       await Parameter.fetchAll();
+      await QuestionType.fetchAll();
       setLoading(false);
     };
 
@@ -31,10 +33,6 @@ const Admin: React.SFC<AdminProps> = () => {
   if (loading) return <p>Loading...</p>;
   return (
     <div>
-      <EuiTitle>
-        <h1>Admin</h1>
-      </EuiTitle>
-      <Divider />
       <AdminStats />
       <Divider />
       <Switch>

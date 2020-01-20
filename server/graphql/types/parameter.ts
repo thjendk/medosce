@@ -57,11 +57,7 @@ export const resolvers = {
 
       // Joins
       if (data.categoryIds) {
-        const joins = data.categoryIds.map((categoryId) => ({ parameterId: id, categoryId }));
-        await ParametersCategories.query()
-          .where({ parameterId: parameter.parameterId })
-          .delete();
-        await ParametersCategories.query().insertGraph(joins);
+        await ParametersCategories.updateRelations(parameter.parameterId, data.categoryIds);
         delete data.categoryIds;
       }
 

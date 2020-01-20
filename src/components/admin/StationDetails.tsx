@@ -4,8 +4,9 @@ import { ReduxState } from 'redux/reducers';
 import { EuiInMemoryTable, EuiButton } from '@elastic/eui';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import Routes from 'classes/Routes';
-import { Divider } from 'semantic-ui-react';
+import { Divider, Dropdown } from 'semantic-ui-react';
 import QuestionForm from './forms/QuestionForm';
+import Question from 'classes/Question';
 
 export interface StationDetailsProps {}
 
@@ -16,6 +17,16 @@ const StationDetails: React.SFC<StationDetailsProps> = () => {
   const questions = useSelector((state: ReduxState) =>
     state.admin.questions.filter((question) => question.station.id === stationId)
   );
+  const questionTypes = useSelector((state: ReduxState) => state.admin.questionTypes);
+  const questionTypeOptions = questionTypes.map((questionType) => ({
+    key: questionType.id,
+    value: questionType.id,
+    text: questionType.name
+  }));
+
+  const handleChange = async (questionId: string, questionTypeIds: string[]) => {
+    await Question.update(questionId, { questionTypeIds });
+  };
 
   const columns = [
     {
@@ -29,6 +40,19 @@ const StationDetails: React.SFC<StationDetailsProps> = () => {
     {
       name: 'Text',
       field: 'text'
+    },
+    {
+      name: 'Question types',
+      render: (question: Question) => (
+        <Dropdown
+          multiple
+          selection
+          search
+          options={questionTypeOptions}
+          value={question.questionTypes.map((questionType) => questionType.id)}
+          onChange={(e, { value }) => handleChange(question.id, value as string[])}
+        />
+      )
     },
     {
       name: 'Edit',
@@ -46,7 +70,7 @@ const StationDetails: React.SFC<StationDetailsProps> = () => {
 
   return (
     <div>
-      <EuiInMemoryTable items={questions} columns={columns} pagination />
+      <EuiInMemoryTable items={questions} columns={columns} />
       <Divider />
       <QuestionForm stationId={stationId} />
     </div>
