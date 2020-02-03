@@ -5,7 +5,7 @@ import authReducer from 'redux/reducers/auth';
 import Role from './Role';
 
 interface User {
-  id: string;
+  id: number;
   username: string;
   email: string;
   role: Role;

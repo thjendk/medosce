@@ -5,7 +5,7 @@ import QuestionType from 'models/questionTypes.model';
 
 export const typeDefs = gql`
   type QuestionType {
-    id: String
+    id: Int
     name: String
     categories: [Category]
   }

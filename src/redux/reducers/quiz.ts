@@ -28,7 +28,7 @@ const quizReducer = createSlice({
     },
     setQuestionNumber: (
       state,
-      action: PayloadAction<{ stationId: string; questionNumber: number }>
+      action: PayloadAction<{ stationId: number; questionNumber: number }>
     ) => {
       const index = state.items.findIndex(
         (station) => station.station.id === action.payload.stationId

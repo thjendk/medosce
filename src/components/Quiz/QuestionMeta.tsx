@@ -11,8 +11,8 @@ const QuestionMeta: React.SFC<QuestionMetaProps> = () => {
 
   return (
     <Menu size="tiny">
-      <Menu.Item>Egne tidligere besvarelser (count)</Menu.Item>
-      <Menu.Item>Offentlige besvarelser (count)</Menu.Item>
+      <Menu.Item>Egne tidligere besvarelser</Menu.Item>
+      <Menu.Item>Offentlige besvarelser</Menu.Item>
       <Menu.Menu position="right">
         <Menu.Item onClick={() => Settings.toggleToolbox()}>
           {showToolbox ? 'Skjul toolbox' : 'Vis toolbox'}

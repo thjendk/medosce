@@ -5,7 +5,7 @@ import Stations from 'models/stations.model';
 
 export const typeDefs = gql`
   type Station {
-    id: String
+    id: Int
     intro: String
     globalScore: Int
     stationNumber: Int
@@ -29,7 +29,7 @@ export const typeDefs = gql`
     intro: String
     globalScore: Int
     stationNumber: Int
-    examSetId: String
+    examSetId: Int
   }
 `;
 

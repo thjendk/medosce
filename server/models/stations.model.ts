@@ -1,11 +1,11 @@
 import { Model } from 'objection';
 
 interface Stations {
-  stationId: string;
+  stationId: number;
   intro: string;
   globalScore: number;
   stationNumber: number;
-  examSetId: string;
+  examSetId: number;
 }
 
 class Stations extends Model {

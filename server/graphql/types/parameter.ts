@@ -5,7 +5,7 @@ import ParametersCategories from 'models/parametersCategories.model';
 
 export const typeDefs = gql`
   type Parameter {
-    id: String
+    id: Int
     name: String
     categories: [Category]
   }
@@ -16,12 +16,12 @@ export const typeDefs = gql`
 
   extend type Mutation {
     createParameter(data: ParameterInput): Parameter
-    updateParameter(id: String, data: ParameterInput): Parameter
+    updateParameter(id: Int, data: ParameterInput): Parameter
   }
 
   input ParameterInput {
     name: String
-    categoryIds: [String]
+    categoryIds: [Int]
   }
 `;
 

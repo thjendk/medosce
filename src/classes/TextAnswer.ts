@@ -1,6 +1,6 @@
 interface TextAnswer {
   text: string;
-  questionId: string;
+  questionId: number;
 }
 
 class TextAnswer {

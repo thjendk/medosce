@@ -1,15 +1,15 @@
 import { Model } from 'objection';
 
 interface QuestionsQuestionType {
-  questionTypeId: string;
-  questionId: string;
+  questionTypeId: number;
+  questionId: number;
 }
 
 class QuestionsQuestionType extends Model {
   static tableName = 'questionsQuestionTypes';
   static idColumn = ['questionTypeId', 'questionId'];
 
-  static updateRelations = async (questionId: string, questionTypeIds: string[]) => {
+  static updateRelations = async (questionId: number, questionTypeIds: number[]) => {
     const inserts = questionTypeIds.map((questionTypeId) => ({ questionTypeId, questionId }));
     await QuestionsQuestionType.query()
       .where({ questionId })

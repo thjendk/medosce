@@ -57,7 +57,7 @@ const QuestionToolbox: React.SFC<QuestionToolboxProps> = ({ index }) => {
                 .filter((parameter) => !answerParameterIds.includes(parameter.id))
                 .map((parameter) => ({
                   label: parameter.name.toTitleCase(),
-                  key: parameter.id,
+                  key: parameter.id.toString(),
                   onClick: () =>
                     handleAnswer({
                       giveUp: false,

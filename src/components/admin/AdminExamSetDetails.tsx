@@ -14,7 +14,7 @@ import StationForm from './forms/StationForm';
 export interface AdminExamSetDetails {}
 
 const AdminExamSetDetails: React.SFC<AdminExamSetDetails> = () => {
-  const { examSetId } = useParams<{ examSetId: string }>();
+  const examSetId = Number(useParams<{ examSetId: string }>().examSetId);
   const history = useHistory();
   const location = useLocation();
   const examSet = useSelector((state: ReduxState) =>
@@ -45,7 +45,7 @@ const AdminExamSetDetails: React.SFC<AdminExamSetDetails> = () => {
     {
       field: 'id',
       name: 'Edit',
-      render: (id: string) => (
+      render: (id: number) => (
         <EuiButton
           color="primary"
           size="s"

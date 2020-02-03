@@ -8,7 +8,7 @@ import adminReducer from 'redux/reducers/admin';
 import Parameter from './Parameter';
 
 interface Station {
-  id: string;
+  id: number;
   intro: string;
   globalScore: number;
   stationNumber: number;
@@ -20,7 +20,7 @@ export interface StationInput {
   intro: string;
   globalScore: number;
   stationNumber: number;
-  examSetId: string;
+  examSetId: number;
 }
 
 class Station {

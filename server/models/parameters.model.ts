@@ -1,9 +1,9 @@
 import { Model } from 'objection';
 
 interface Parameters {
-  parameterId: string;
+  parameterId: number;
   name: string;
-  categoryId: string;
+  categoryId: number;
 }
 
 class Parameters extends Model {

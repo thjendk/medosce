@@ -1,9 +1,9 @@
 import QuestionType from 'models/questionTypes.model';
 import DataLoader from 'dataloader';
 
-const batchQuestionTypes = async (ids: string[]) => {
+const batchQuestionTypes = async (ids: number[]) => {
   const questionTypes = await QuestionType.query().findByIds(ids);
   return ids.map((id) => questionTypes.find((questionType) => questionType.questionTypeId === id));
 };
 
-export const questionTypeLoader = new DataLoader((ids: string[]) => batchQuestionTypes(ids));
+export const questionTypeLoader = new DataLoader((ids: number[]) => batchQuestionTypes(ids));

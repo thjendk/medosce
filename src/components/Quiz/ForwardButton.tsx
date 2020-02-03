@@ -3,6 +3,7 @@ import { Button } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
 import Station from 'classes/Station';
+import { StyledDivider } from 'styles/layout';
 
 export interface ForwardButtonProps {
   handleForwards: Function;
@@ -20,14 +21,26 @@ const ForwardButton: React.SFC<ForwardButtonProps> = ({ handleForwards, index })
     return null;
   if (question.questionNumber === questions.length)
     return (
-      <Button
-        fluid
-        color="green"
-        basic
-        onClick={() => Station.changeStationIndex(stationIndex + 1)}
-      >
-        Næste station
-      </Button>
+      <div>
+        <Button
+          fluid
+          color="blue"
+          basic
+          onClick={() => handleForwards()}
+          disabled={questionIndex > index}
+        >
+          Vis manglende
+        </Button>
+        <StyledDivider small />
+        <Button
+          fluid
+          color="green"
+          basic
+          onClick={() => Station.changeStationIndex(stationIndex + 1)}
+        >
+          Næste station
+        </Button>
+      </div>
     );
   return (
     <Button

@@ -1,8 +1,8 @@
 import { Model } from 'objection';
 
 interface Questions {
-  questionId: string;
-  stationId: string;
+  questionId: number;
+  stationId: number;
   text: string;
   questionNumber: number;
 }

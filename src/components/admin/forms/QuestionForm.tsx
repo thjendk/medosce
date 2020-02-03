@@ -5,7 +5,7 @@ import Question, { QuestionInput } from 'classes/Question';
 import { EuiTextArea } from '@elastic/eui';
 
 export interface QuestionFormProps {
-  stationId: string;
+  stationId: number;
 }
 
 const QuestionForm: React.SFC<QuestionFormProps> = ({ stationId }) => {

@@ -16,7 +16,7 @@ const ProtectedRoute: React.SFC<ProtectedRouteProps> = ({ path, component: Compo
     <Route
       path={path}
       render={(routeProps) => {
-        if (!user || user.role.id !== '1') {
+        if (!user || user.role.id !== 1) {
           // Not Admin, or not logged in
           return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />;
         }

@@ -23,19 +23,19 @@ class Routes {
 
   static adminExamSet = {
     path: Routes.admin.path + '/examset/:examSetId',
-    dynamicPath: (id: string) => `/examset/${id}`,
+    dynamicPath: (id: number) => `/examset/${id}`,
     component: AdminExamSetDetails
   };
 
   static adminStation = {
     path: Routes.adminExamSet.path + '/station/:stationId',
-    dynamicPath: (id: string) => `/station/${id}`,
+    dynamicPath: (id: number) => `/station/${id}`,
     component: StationDetails
   };
 
   static adminQuestion = {
     path: Routes.adminStation.path + '/question/:questionId',
-    dynamicPath: (id: string) => `/question/${id}`,
+    dynamicPath: (id: number) => `/question/${id}`,
     component: QuestionDetails
   };
 

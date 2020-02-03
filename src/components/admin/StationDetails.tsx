@@ -13,7 +13,7 @@ export interface StationDetailsProps {}
 const StationDetails: React.SFC<StationDetailsProps> = () => {
   const history = useHistory();
   const location = useLocation();
-  const { stationId } = useParams<{ stationId: string }>();
+  const stationId = Number(useParams<{ stationId: string }>().stationId);
   const questions = useSelector((state: ReduxState) =>
     state.admin.questions.filter((question) => question.station.id === stationId)
   );
@@ -24,7 +24,7 @@ const StationDetails: React.SFC<StationDetailsProps> = () => {
     text: questionType.name
   }));
 
-  const handleChange = async (questionId: string, questionTypeIds: string[]) => {
+  const handleChange = async (questionId: number, questionTypeIds: number[]) => {
     await Question.update(questionId, { questionTypeIds });
   };
 
@@ -50,14 +50,14 @@ const StationDetails: React.SFC<StationDetailsProps> = () => {
           search
           options={questionTypeOptions}
           value={question.questionTypes.map((questionType) => questionType.id)}
-          onChange={(e, { value }) => handleChange(question.id, value as string[])}
+          onChange={(e, { value }) => handleChange(question.id, value as number[])}
         />
       )
     },
     {
       name: 'Edit',
       field: 'id',
-      render: (id: string) => (
+      render: (id: number) => (
         <EuiButton
           size="s"
           onClick={() => history.push(location.pathname + Routes.adminQuestion.dynamicPath(id))}

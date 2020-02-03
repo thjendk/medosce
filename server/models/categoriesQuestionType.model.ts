@@ -1,8 +1,8 @@
 import { Model } from 'objection';
 
 interface CategoriesQuestionType {
-  categoryId: string;
-  questionTypeId: string;
+  categoryId: number;
+  questionTypeId: number;
 }
 
 class CategoriesQuestionType extends Model {

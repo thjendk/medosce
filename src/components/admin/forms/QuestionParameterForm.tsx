@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
 
 export interface QuestionParameterFormProps {
-  questionId: string;
+  questionId: number;
 }
 
 const QuestionParameterForm: React.SFC<QuestionParameterFormProps> = ({ questionId }) => {
@@ -19,7 +19,7 @@ const QuestionParameterForm: React.SFC<QuestionParameterFormProps> = ({ question
       value: '',
       point: 0
     },
-    onSubmit: (values) => handleSubmit(values)
+    onSubmit: (values) => handleSubmit({ ...values, parameterId: Number(values.parameterId) })
   });
 
   const handleSubmit = async (values: QuestionParameterInput) => {

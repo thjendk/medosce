@@ -5,7 +5,7 @@ import adminReducer from 'redux/reducers/admin';
 import Station from './Station';
 
 interface ExamSet {
-  id: string;
+  id: number;
   season: 'E' | 'F';
   year: string;
   stations: Station[];

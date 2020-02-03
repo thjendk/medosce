@@ -3,17 +3,16 @@ import Apollo from './Apollo';
 import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
 import Category from './Category';
-import adminReducer from 'redux/reducers/admin';
 
 interface Parameter {
-  id: string;
+  id: number;
   name: string;
   categories: Category[];
 }
 
 export interface ParameterInput {
   name: string;
-  categoryIds: string[];
+  categoryIds: number[];
 }
 
 class Parameter {
@@ -68,9 +67,9 @@ class Parameter {
     return store.dispatch(quizReducer.actions.addParameter(parameter));
   };
 
-  static update = async (id: String, data: Partial<ParameterInput>) => {
+  static update = async (id: number, data: Partial<ParameterInput>) => {
     const mutation = gql`
-      mutation($id: String, $data: ParameterInput) {
+      mutation($id: Int, $data: ParameterInput) {
         updateParameter(id: $id, data: $data) {
           ...Parameter
         }

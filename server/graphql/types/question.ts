@@ -6,7 +6,7 @@ import QuestionsQuestionType from 'models/questionsQuestionType.model';
 
 export const typeDefs = gql`
   type Question {
-    id: String
+    id: Int
     questionNumber: Int
     text: String
     station: Station
@@ -15,7 +15,7 @@ export const typeDefs = gql`
   }
 
   type QuestionParameter {
-    id: String
+    id: Int
     value: String
     point: Float
     parameter: Parameter
@@ -27,21 +27,21 @@ export const typeDefs = gql`
 
   extend type Mutation {
     createQuestion(data: QuestionInput): Question
-    updateQuestion(id: String, data: QuestionInput): Question
+    updateQuestion(id: Int, data: QuestionInput): Question
     createQuestionParameter(data: QuestionParameterInput): Question
-    deleteQuestionParameter(id: String): Question
+    deleteQuestionParameter(id: Int): Question
   }
 
   input QuestionInput {
-    stationId: String
+    stationId: Int
     text: String
     questionNumber: Int
-    questionTypeIds: [String]
+    questionTypeIds: [Int]
   }
 
   input QuestionParameterInput {
-    questionId: String
-    parameterId: String
+    questionId: Int
+    parameterId: Int
     value: String
     point: Float
   }

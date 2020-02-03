@@ -6,11 +6,12 @@ import quizReducer from 'redux/reducers/quiz';
 import QuestionType from './QuestionType';
 
 interface Category {
-  id: string;
+  id: number;
   name: string;
   iconName: string;
   parameters: Parameter[];
   questionTypes: QuestionType[];
+  parent: Category;
 }
 
 export interface CategoryInput {
@@ -27,6 +28,9 @@ class Category {
       parameters {
         id
         name
+      }
+      parent {
+        id
       }
       questionTypes {
         ...QuestionType

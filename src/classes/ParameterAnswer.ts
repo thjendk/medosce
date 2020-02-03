@@ -2,10 +2,10 @@ import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
 
 interface ParameterAnswer {
-  parameterId: string;
-  questionId: string;
+  parameterId: number;
+  questionId: number;
   giveUp: boolean;
-  stationId: string;
+  stationId: number;
 }
 
 class ParameterAnswer {

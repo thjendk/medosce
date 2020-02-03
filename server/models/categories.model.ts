@@ -1,8 +1,9 @@
 import { Model } from 'objection';
 
 interface Categories {
-  categoryId: string;
+  categoryId: number;
   name: string;
+  parentId: number;
   iconName: string;
 }
 

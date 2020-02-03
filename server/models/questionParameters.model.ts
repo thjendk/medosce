@@ -1,9 +1,9 @@
 import { Model } from 'objection';
 
 interface QuestionParameters {
-  questionParameterId: string;
-  questionId: string;
-  parameterId: string;
+  questionParameterId: number;
+  questionId: number;
+  parameterId: number;
   value: string;
   point: number;
 }

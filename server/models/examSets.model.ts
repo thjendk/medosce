@@ -1,7 +1,7 @@
 import { Model } from 'objection';
 
 interface ExamSets {
-  examSetId: string;
+  examSetId: number;
   season: 'E' | 'F';
   year: string;
 }

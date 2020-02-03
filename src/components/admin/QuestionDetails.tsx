@@ -17,7 +17,7 @@ import { EuiButton } from '@elastic/eui';
 export interface QuestionDetailsProps {}
 
 const QuestionDetails: React.SFC<QuestionDetailsProps> = () => {
-  const { questionId } = useParams<{ questionId: string }>();
+  const questionId = Number(useParams<{ questionId: string }>().questionId);
   const question = useSelector((state: ReduxState) =>
     state.admin.questions.find((question) => question.id === questionId)
   );

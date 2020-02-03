@@ -1,7 +1,7 @@
 import { Model } from 'objection';
 
 interface Role {
-  roleId: string;
+  roleId: number;
   name: string;
 }
 

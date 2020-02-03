@@ -82,8 +82,8 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ index }) => {
               }}
               options={parameters.map((parameter) => ({
                 label: parameter.name,
-                key: parameter.id,
-                value: parameter.id
+                key: parameter.id.toString(),
+                value: parameter.id.toString()
               }))}
             >
               {(list, search) => (

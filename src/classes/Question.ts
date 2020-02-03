@@ -9,7 +9,7 @@ import Station from './Station';
 import QuestionType from './QuestionType';
 
 interface Question {
-  id: string;
+  id: number;
   questionNumber: number;
   text: string;
   station: Station;
@@ -18,22 +18,22 @@ interface Question {
 }
 
 export interface QuestionParameter {
-  id: string;
+  id: number;
   value: string;
   point: number;
   parameter: Parameter;
 }
 
 export interface QuestionInput {
-  stationId: string;
+  stationId: number;
   text: string;
   questionNumber: number;
-  questionTypeIds: string[];
+  questionTypeIds: number[];
 }
 
 export interface QuestionParameterInput {
-  questionId: string;
-  parameterId: string;
+  questionId: number;
+  parameterId: number;
   value: string;
   point: number;
 }
@@ -72,7 +72,7 @@ class Question {
     return store.dispatch(adminReducer.actions.setQuestions(questions));
   };
 
-  static nextQuestion = (stationId: string) => {
+  static nextQuestion = (stationId: number) => {
     const state = store.getState();
     const stationIndex = state.quiz.items.findIndex((item) => item.station.id === stationId);
     const nextQuestionNumber = state.quiz.items[stationIndex].questionIndex + 1;
@@ -97,7 +97,7 @@ class Question {
 
   static update = async (id: Question['id'], data: Partial<QuestionInput>) => {
     const mutation = gql`
-      mutation($id: String, $data: QuestionInput) {
+      mutation($id: Int, $data: QuestionInput) {
         updateQuestion(id: $id, data: $data) {
           ...Question
         }
@@ -123,9 +123,9 @@ class Question {
     return store.dispatch(adminReducer.actions.addQuestion(question));
   };
 
-  static deleteParameter = async (id: String) => {
+  static deleteParameter = async (id: number) => {
     const mutation = gql`
-      mutation($id: String) {
+      mutation($id: Int) {
         deleteQuestionParameter(id: $id) {
           ...Question
         }

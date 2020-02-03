@@ -1,6 +1,5 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
-import Parameters from 'models/parameters.model';
 import Categories from 'models/categories.model';
 import CategoriesQuestionType from 'models/categoriesQuestionType.model';
 import ParametersCategories from 'models/parametersCategories.model';
@@ -9,6 +8,7 @@ export const typeDefs = gql`
   type Category {
     id: ID
     name: String
+    parent: Category
     iconName: String
     parameters: [Parameter]
     questionTypes: [QuestionType]
@@ -38,6 +38,10 @@ export const resolvers = {
     iconName: async ({ id }, _, ctx: Context) => {
       const category = await ctx.categoryLoader.load(id);
       return category.iconName;
+    },
+    parent: async ({ id }, _, ctx: Context) => {
+      const category = await ctx.categoryLoader.load(id);
+      return { id: category.parentId };
     },
     parameters: async ({ id }, _, ctx: Context) => {
       const parameters = await ParametersCategories.query().where({ categoryId: id });

@@ -4,7 +4,7 @@ import { store } from 'index';
 import adminReducer from 'redux/reducers/admin';
 
 interface QuestionType {
-  id: string;
+  id: number;
   name: string;
 }
 

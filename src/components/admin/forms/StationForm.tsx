@@ -4,7 +4,7 @@ import Station, { StationInput } from 'classes/Station';
 import { useFormik } from 'formik';
 
 export interface StationFormProps {
-  examSetId: string;
+  examSetId: number;
 }
 
 const StationForm: React.SFC<StationFormProps> = ({ examSetId }) => {

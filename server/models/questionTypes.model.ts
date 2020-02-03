@@ -1,7 +1,7 @@
 import { Model } from 'objection';
 
 interface QuestionType {
-  questionTypeId: string;
+  questionTypeId: number;
   name: string;
 }
 

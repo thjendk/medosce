@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken';
 const secret = process.env.SECRET || '';
 
 interface User {
-  userId: string;
+  userId: number;
   username: string;
   password: string;
-  roleId: string;
+  roleId: number;
   email: string;
   createdAt: Date;
   updatedAt: Date;

@@ -35,7 +35,7 @@ const SubMenus: React.SFC<SubMenusProps> = ({ sidebarHide }) => {
         {user && (
           <>
             <Menu.Item>Velkommen {user.username.toTitleCase()}</Menu.Item>
-            {user.role.id === '1' && (
+            {user.role.id === 1 && (
               <Menu.Item onClick={() => handleNavigation('/admin')}>Admin</Menu.Item>
             )}
             <Menu.Item onClick={() => handleNavigation('/logout')}>

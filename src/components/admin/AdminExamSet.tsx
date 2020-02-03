@@ -33,7 +33,7 @@ const AdminExamSet: React.SFC<AdminExamSetProps> = () => {
     {
       name: 'Edit',
       field: 'id',
-      render: (id: string) => (
+      render: (id: number) => (
         <EuiButton
           size="s"
           color="primary"
