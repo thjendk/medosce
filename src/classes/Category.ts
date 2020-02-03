@@ -11,7 +11,6 @@ interface Category {
   iconName: string;
   parameters: Parameter[];
   questionTypes: QuestionType[];
-  parent: Category;
 }
 
 export interface CategoryInput {
@@ -28,9 +27,9 @@ class Category {
       parameters {
         id
         name
-      }
-      parent {
-        id
+        parent {
+          id
+        }
       }
       questionTypes {
         ...QuestionType

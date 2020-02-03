@@ -1,6 +1,5 @@
 import React from 'react';
 import { QuestionText } from 'styles/layout';
-import QuestionClass from 'classes/Question';
 import { Segment, Divider } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
@@ -25,7 +24,7 @@ const Question: React.SFC<QuestionProps> = ({ index }) => {
       <Divider />
       <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <QuestionToolbox index={index} />
-        <div style={{ width: '70%', flex: '1', margin: '1em' }}>
+        <div style={{ width: '70%', flex: '1' }}>
           <QuestionAnswers index={index} />
         </div>
       </div>

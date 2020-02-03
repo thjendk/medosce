@@ -4,6 +4,7 @@ interface Parameters {
   parameterId: number;
   name: string;
   categoryId: number;
+  parentId: number;
 }
 
 class Parameters extends Model {

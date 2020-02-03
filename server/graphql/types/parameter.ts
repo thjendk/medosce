@@ -7,6 +7,7 @@ export const typeDefs = gql`
   type Parameter {
     id: Int
     name: String
+    parent: Parameter
     categories: [Category]
   }
 
@@ -31,6 +32,10 @@ export const resolvers = {
     name: async ({ id }, _, ctx: Context) => {
       const parameter = await ctx.parametersLoader.load(id);
       return parameter.name;
+    },
+    parent: async ({ id }, _, ctx: Context) => {
+      const parameter = await ctx.parametersLoader.load(id);
+      return { id: parameter.parentId };
     },
     categories: async ({ id }) => {
       const categories = await ParametersCategories.query().where({ parameterId: id });

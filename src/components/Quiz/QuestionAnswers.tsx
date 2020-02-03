@@ -182,12 +182,6 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ index }) => {
 
   return (
     <div>
-      {missingAnswersCount > 1 && (
-        <div style={{ textAlign: 'center' }}>
-          <p>Du mangler {missingAnswersCount} værdier.</p>
-          <Divider />
-        </div>
-      )}
       <EuiTextArea
         placeholder="Overvejelser..."
         fullWidth
@@ -197,9 +191,14 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ index }) => {
         disabled={missingAnswersCount === 0 || questionIndex > currentQuestionIndex}
       />
       <QuestionMeta />
+      {missingAnswersCount > 1 && (
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '14px' }}>Du mangler {missingAnswersCount} værdier.</p>
+          <Divider />
+        </div>
+      )}
       {items.length > 0 && (
         <>
-          <Divider />
           <EuiInMemoryTable sorting items={items} columns={columns} />
           <Divider />
         </>

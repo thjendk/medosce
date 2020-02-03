@@ -8,7 +8,6 @@ export const typeDefs = gql`
   type Category {
     id: ID
     name: String
-    parent: Category
     iconName: String
     parameters: [Parameter]
     questionTypes: [QuestionType]
@@ -38,10 +37,6 @@ export const resolvers = {
     iconName: async ({ id }, _, ctx: Context) => {
       const category = await ctx.categoryLoader.load(id);
       return category.iconName;
-    },
-    parent: async ({ id }, _, ctx: Context) => {
-      const category = await ctx.categoryLoader.load(id);
-      return { id: category.parentId };
     },
     parameters: async ({ id }, _, ctx: Context) => {
       const parameters = await ParametersCategories.query().where({ categoryId: id });

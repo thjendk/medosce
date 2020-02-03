@@ -8,6 +8,7 @@ interface Parameter {
   id: number;
   name: string;
   categories: Category[];
+  parent: Parameter;
 }
 
 export interface ParameterInput {
@@ -22,6 +23,9 @@ class Parameter {
       name
       categories {
         ...Category
+      }
+      parent {
+        id
       }
     }
     ${Category.fragment}
