@@ -24,7 +24,7 @@ const Question: React.SFC<QuestionProps> = ({ index }) => {
       <Divider />
       <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <QuestionToolbox index={index} />
-        <div style={{ width: '70%', flex: '1' }}>
+        <div style={{ width: '70%', flex: '1', margin: '0 1em' }}>
           <QuestionAnswers index={index} />
         </div>
       </div>

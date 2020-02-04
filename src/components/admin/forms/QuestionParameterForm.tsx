@@ -11,7 +11,10 @@ export interface QuestionParameterFormProps {
 }
 
 const QuestionParameterForm: React.SFC<QuestionParameterFormProps> = ({ questionId }) => {
-  const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
+  let parameters = useSelector((state: ReduxState) => state.quiz.parameters);
+  parameters = parameters.filter(
+    (parameter) => !parameters.some((param) => parameter.parent.id === param.id)
+  );
   const formik = useFormik({
     initialValues: {
       questionId: questionId,
