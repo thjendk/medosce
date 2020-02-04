@@ -14,7 +14,7 @@ const AdminCategories: React.SFC<AdminCategoriesProps> = () => {
   const columns = [
     {
       field: 'id',
-      name: 'ID'
+      name: 'Int'
     },
     {
       field: 'name',

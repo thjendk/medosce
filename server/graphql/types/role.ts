@@ -3,7 +3,7 @@ import { Context } from 'config/apolloServer';
 
 export const typeDefs = gql`
   type Role {
-    id: ID
+    id: Int
     name: String
   }
 `;

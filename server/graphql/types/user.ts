@@ -4,7 +4,7 @@ import { Context } from 'config/apolloServer';
 
 export const typeDefs = gql`
   type User {
-    id: ID
+    id: Int
     username: String!
     email: String!
     role: Role

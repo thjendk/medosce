@@ -5,7 +5,7 @@ import Stations from 'models/stations.model';
 
 export const typeDefs = gql`
   type ExamSet {
-    id: ID
+    id: Int
     season: String
     year: Int
     stations: [Station]

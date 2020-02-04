@@ -17,7 +17,7 @@ const AdminExamSet: React.SFC<AdminExamSetProps> = () => {
   const columns = [
     {
       field: 'id',
-      name: 'ID',
+      name: 'Int',
       sortable: true
     },
     {

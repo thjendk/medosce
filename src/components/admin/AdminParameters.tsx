@@ -25,7 +25,7 @@ const AdminParameters: React.SFC<AdminParametersProps> = () => {
   const columns = [
     {
       field: 'id',
-      name: 'ID',
+      name: 'Int',
       sortable: true
     },
     {

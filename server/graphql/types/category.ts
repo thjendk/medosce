@@ -6,7 +6,7 @@ import ParametersCategories from 'models/parametersCategories.model';
 
 export const typeDefs = gql`
   type Category {
-    id: ID
+    id: Int
     name: String
     iconName: String
     parameters: [Parameter]

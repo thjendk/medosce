@@ -27,7 +27,7 @@ const AdminExamSetDetails: React.SFC<AdminExamSetDetails> = () => {
   const columns = [
     {
       field: 'id',
-      name: 'ID'
+      name: 'Int'
     },
     {
       field: 'intro',
