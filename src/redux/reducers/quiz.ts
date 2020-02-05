@@ -1,16 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Station from 'classes/Station';
-import Category from 'classes/Category';
 import Parameter from 'classes/Parameter';
-import ParameterAnswer from 'classes/ParameterAnswer';
+import UserAnswer from 'classes/UserAnswer';
 import { insertOrReplace } from 'redux/misc/reduxFunctions';
+import Question from 'classes/Question';
 
 const initialState = {
-  items: [] as { station: Station; questionIndex: number }[],
-  categories: [] as Category[],
+  quizItems: [] as { station: Station; questionIndex: number }[],
+  questions: [] as Question[],
   parameters: [] as Parameter[],
+  giveUpQuestionIds: [] as number[],
   stationIndex: 0,
-  parameterAnswers: [] as ParameterAnswer[]
+  userAnswers: [] as UserAnswer[]
 };
 
 const quizReducer = createSlice({
@@ -18,10 +19,8 @@ const quizReducer = createSlice({
   initialState,
   reducers: {
     setStations: (state, action: PayloadAction<Station[]>) => {
-      state.items = action.payload.map((station) => ({ station, questionIndex: 0 }));
-    },
-    setCategories: (state, action: PayloadAction<Category[]>) => {
-      state.categories = action.payload;
+      state.quizItems = action.payload.map((station) => ({ station, questionIndex: 0 }));
+      action.payload.map((station) => state.questions.push(...station.questions));
     },
     setStationIndex: (state, action: PayloadAction<number>) => {
       state.stationIndex = action.payload;
@@ -30,32 +29,35 @@ const quizReducer = createSlice({
       state,
       action: PayloadAction<{ stationId: number; questionNumber: number }>
     ) => {
-      const index = state.items.findIndex(
+      const index = state.quizItems.findIndex(
         (station) => station.station.id === action.payload.stationId
       );
       if (index === -1) return;
-      state.items[index].questionIndex = action.payload.questionNumber;
+      state.quizItems[index].questionIndex = action.payload.questionNumber;
     },
     setParameters: (state, action: PayloadAction<Parameter[]>) => {
       state.parameters = action.payload;
     },
-    addParameterAnswer: (state, action: PayloadAction<ParameterAnswer>) => {
-      const index = state.parameterAnswers.findIndex(
+    addUserAnswer: (state, action: PayloadAction<UserAnswer>) => {
+      const index = state.userAnswers.findIndex(
         (parameterAnswer) =>
           parameterAnswer.parameterId === action.payload.parameterId &&
           parameterAnswer.questionId === action.payload.questionId
       );
       if (index === -1) {
-        state.parameterAnswers.push(action.payload);
+        state.userAnswers.push(action.payload);
       } else {
-        state.parameterAnswers[index] = action.payload;
+        state.userAnswers[index] = action.payload;
       }
     },
     addParameter: (state, action: PayloadAction<Parameter>) => {
       insertOrReplace(state.parameters, action.payload);
     },
-    addCategory: (state, action: PayloadAction<Category>) => {
-      insertOrReplace(state.categories, action.payload);
+    addGiveUpQuestionId: (state, action: PayloadAction<number>) => {
+      state.giveUpQuestionIds.push(action.payload);
+    },
+    addQuestion: (state, action: PayloadAction<Question>) => {
+      insertOrReplace(state.questions, action.payload);
     }
   }
 });

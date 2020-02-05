@@ -8,7 +8,7 @@ export interface QuizNavigatorProps {}
 
 const QuizNavigator: React.SFC<QuizNavigatorProps> = () => {
   const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
-  const items = useSelector((state: ReduxState) => state.quiz.items);
+  const items = useSelector((state: ReduxState) => state.quiz.quizItems);
 
   const handleNavigation = (step: number) => {
     const newIndex = stationIndex + step;

@@ -7,43 +7,42 @@ import _ from 'lodash';
 export interface StationPointsProps {}
 
 const StationPoints: React.SFC<StationPointsProps> = () => {
-  const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
-  const item = useSelector((state: ReduxState) => state.quiz.items[stationIndex]);
-  const answers = useSelector((state: ReduxState) =>
-    state.quiz.parameterAnswers.filter((answer) => answer.stationId === item.station.id)
-  );
+  // const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
+  // const item = useSelector((state: ReduxState) => state.quiz.quizItem[stationIndex]);
+  // const answers = useSelector((state: ReduxState) =>
+  //   state.quiz.userAnswers.filter((answer) => answer.stationId === item.station.id)
+  // );
 
-  const correct = answers.filter((answer) => !answer.giveUp);
-  const gaveUp = answers.filter((answer) => answer.giveUp);
+  // const correct = answers.filter((answer) => !answer.parameterId);
+  // const gaveUp = answers.filter((answer) => answer.parameterId);
 
-  const correctPoints =
-    _.sumBy(
-      correct,
-      (answer) =>
-        item.station.questions
-          .find((question) => question.id === answer.questionId)
-          .parameters.find(
-            (questionParameter) => questionParameter.parameter.id === answer.parameterId
-          )?.point
-    ) || 0;
-  const gaveUpPoints =
-    _.sumBy(
-      gaveUp,
-      (answer) =>
-        item.station.questions
-          .find((question) => question.id === answer.questionId)
-          .parameters.find(
-            (questionParameter) => questionParameter.parameter.id === answer.parameterId
-          )?.point
-    ) || 0;
+  // TODO
+  return null;
 
-  return (
-    <div>
-      <Paragraph color="green">Point: {correctPoints}</Paragraph>
-      <br />
-      <Paragraph color="red">Mistede point: {gaveUpPoints}</Paragraph>
-    </div>
-  );
+  // const correctPoints =
+  //   _.sumBy(
+  //     correct,
+  //     (answer) =>
+  //       item.station.questions
+  //         .find((question) => question.id === answer.questionId)
+  //         .answers.find((answer) => answer.parameter.id === answer.parameterId)?.point
+  //   ) || 0;
+  // const gaveUpPoints =
+  //   _.sumBy(
+  //     gaveUp,
+  //     (answer) =>
+  //       item.station.questions
+  //         .find((question) => question.id === answer.questionId)
+  //         .answers.find((answer) => answer.parameter.id === answer.parameterId)?.point
+  //   ) || 0;
+
+  // return (
+  //   <div>
+  //     <Paragraph color="green">Point: {correctPoints}</Paragraph>
+  //     <br />
+  //     <Paragraph color="red">Mistede point: {gaveUpPoints}</Paragraph>
+  //   </div>
+  // );
 };
 
 export default StationPoints;

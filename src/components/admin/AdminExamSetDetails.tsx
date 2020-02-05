@@ -10,6 +10,7 @@ import { EuiText } from '@elastic/eui';
 import { StyledDivider } from 'styles/layout';
 import Routes from 'classes/Routes';
 import StationForm from './forms/StationForm';
+import Station from 'classes/Station';
 
 export interface AdminExamSetDetails {}
 
@@ -43,13 +44,14 @@ const AdminExamSetDetails: React.SFC<AdminExamSetDetails> = () => {
       name: 'Station number'
     },
     {
-      field: 'id',
       name: 'Edit',
-      render: (id: number) => (
+      render: (station: Station) => (
         <EuiButton
           color="primary"
           size="s"
-          onClick={() => history.push(location.pathname + Routes.adminStation.dynamicPath(id))}
+          onClick={() =>
+            history.push(location.pathname + Routes.adminStation.dynamicPath(station.id))
+          }
         >
           Edit
         </EuiButton>

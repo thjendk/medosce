@@ -6,7 +6,7 @@ import { List, Card } from 'semantic-ui-react';
 export interface StationSummaryProps {}
 
 const StationSummary: React.SFC<StationSummaryProps> = () => {
-  const items = useSelector((state: ReduxState) => state.quiz.items);
+  const items = useSelector((state: ReduxState) => state.quiz.quizItems);
 
   return (
     <Card fluid>

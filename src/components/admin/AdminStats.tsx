@@ -9,9 +9,8 @@ export interface AdminStatsProps {}
 
 const AdminStats: React.SFC<AdminStatsProps> = () => {
   const history = useHistory();
-  const location = useLocation();
   const { examSets, stations, questions } = useSelector((state: ReduxState) => state.admin);
-  const { parameters, categories } = useSelector((state: ReduxState) => state.quiz);
+  const { parameters } = useSelector((state: ReduxState) => state.quiz);
 
   return (
     <EuiFlexGroup alignItems="flexStart">
@@ -30,15 +29,6 @@ const AdminStats: React.SFC<AdminStatsProps> = () => {
           title={parameters.length}
           description="Parameters"
           onClick={() => history.push(Routes.adminParameters.path)}
-          style={{ cursor: 'pointer' }}
-        />
-      </EuiFlexItem>
-      <EuiFlexItem>
-        <EuiStat
-          titleSize="m"
-          title={categories.length}
-          description="Categories"
-          onClick={() => history.push(Routes.adminCategories.path)}
           style={{ cursor: 'pointer' }}
         />
       </EuiFlexItem>

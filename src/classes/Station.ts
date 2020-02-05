@@ -5,7 +5,6 @@ import quizReducer from 'redux/reducers/quiz';
 import Question from './Question';
 import ExamSet from './ExamSet';
 import adminReducer from 'redux/reducers/admin';
-import Parameter from './Parameter';
 
 interface Station {
   id: number;
@@ -32,6 +31,8 @@ class Station {
       intro
       examSet {
         id
+        season
+        year
       }
     }
   `;

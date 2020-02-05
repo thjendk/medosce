@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Station from './Station';
 import StationClass from 'classes/Station';
-import Category from 'classes/Category';
 import Parameter from 'classes/Parameter';
 import QuizNavigator from './QuizNavigator';
 import StationPoints from './StationPoints';
@@ -16,12 +15,11 @@ export interface QuizProps {}
 
 const Quiz: React.SFC<QuizProps> = () => {
   const [loading, setLoading] = useState(true);
-  const stations = useSelector((state: ReduxState) => state.quiz.items);
+  const stations = useSelector((state: ReduxState) => state.quiz.quizItems);
 
   useEffect(() => {
     const fetchQuiz = async () => {
       await StationClass.fetchQuiz();
-      await Category.fetchAll();
       await Parameter.fetchAll();
       setLoading(false);
     };
@@ -45,6 +43,7 @@ const Quiz: React.SFC<QuizProps> = () => {
         <QuestionMetadata />
       </Segment>
 
+      <QuizNavigator />
       <StationSummary />
     </div>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { EuiForm, EuiFormRow, EuiText, EuiFieldText, EuiTextArea, EuiButton } from '@elastic/eui';
 import { Dropdown } from 'semantic-ui-react';
 import { useFormik } from 'formik';
-import Question, { QuestionParameterInput } from 'classes/Question';
+import Question, { QuestionAnswerInput } from 'classes/Question';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
 
@@ -18,39 +18,23 @@ const QuestionParameterForm: React.SFC<QuestionParameterFormProps> = ({ question
   const formik = useFormik({
     initialValues: {
       questionId: questionId,
-      parameterId: '',
       value: '',
       point: 0
     },
-    onSubmit: (values) => handleSubmit({ ...values, parameterId: Number(values.parameterId) })
+    onSubmit: (values) => handleSubmit(values)
   });
 
-  const handleSubmit = async (values: QuestionParameterInput) => {
-    await Question.addParameter(values);
+  const handleSubmit = async (values: QuestionAnswerInput) => {
+    await Question.addAnswer(values);
     formik.resetForm();
   };
 
-  const parameterOptions = parameters.map((parameter) => ({
-    text: parameter.name,
-    value: parameter.id,
-    key: parameter.id
-  }));
   return (
     <div>
       <EuiText>
-        <p>Add parameter to question</p>
+        <p>Add answer to question</p>
       </EuiText>
       <EuiForm>
-        <EuiFormRow label="Parameter">
-          <Dropdown
-            fluid
-            search
-            selection
-            value={formik.values.parameterId}
-            options={parameterOptions}
-            onChange={(e, { value }) => formik.setFieldValue('parameterId', value)}
-          />
-        </EuiFormRow>
         <EuiFormRow label="Value">
           <EuiTextArea name="value" onChange={formik.handleChange} value={formik.values.value} />
         </EuiFormRow>

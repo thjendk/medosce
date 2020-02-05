@@ -6,6 +6,7 @@ import { EuiButton, EuiInMemoryTable, EuiText } from '@elastic/eui';
 import { useHistory, useLocation } from 'react-router-dom';
 import Routes from 'classes/Routes';
 import ExamSetForm from './forms/ExamSetForm';
+import ExamSet from 'classes/ExamSet';
 
 export interface AdminExamSetProps {}
 
@@ -32,12 +33,13 @@ const AdminExamSet: React.SFC<AdminExamSetProps> = () => {
     },
     {
       name: 'Edit',
-      field: 'id',
-      render: (id: number) => (
+      render: (examSet: ExamSet) => (
         <EuiButton
           size="s"
           color="primary"
-          onClick={() => history.push(location.pathname + Routes.adminExamSet.dynamicPath(id))}
+          onClick={() =>
+            history.push(location.pathname + Routes.adminExamSet.dynamicPath(examSet.id))
+          }
         >
           Edit
         </EuiButton>

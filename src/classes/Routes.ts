@@ -3,7 +3,6 @@ import StationDetails from '../components/admin/StationDetails';
 import QuestionDetails from '../components/admin/QuestionDetails';
 import AdminExamSet from '../components/admin/AdminExamSet';
 import AdminParameters from 'components/admin/AdminParameters';
-import AdminCategories from 'components/admin/AdminCategories';
 
 class Routes {
   static admin = {
@@ -14,11 +13,6 @@ class Routes {
   static adminParameters = {
     path: Routes.admin.path + '/parameters',
     component: AdminParameters
-  };
-
-  static adminCategories = {
-    path: Routes.admin.path + '/categories',
-    component: AdminCategories
   };
 
   static adminExamSet = {
@@ -44,7 +38,6 @@ class Routes {
     Routes.adminStation,
     Routes.adminExamSet,
     Routes.adminParameters,
-    Routes.adminCategories,
     Routes.admin
   ];
 }

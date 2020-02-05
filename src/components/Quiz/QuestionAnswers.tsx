@@ -1,184 +1,91 @@
-import React, { useState } from 'react';
-import { Divider, Button, Icon, Popup } from 'semantic-ui-react';
-import Question, { QuestionParameter } from 'classes/Question';
+import React, { useState, useContext } from 'react';
+import { Divider, Button } from 'semantic-ui-react';
 import { ReduxState } from 'redux/reducers';
 import { useSelector } from 'react-redux';
-import { StyledDivider } from 'styles/layout';
-import ForwardButton from './ForwardButton';
 import { EuiInMemoryTable, EuiTextArea } from '@elastic/eui';
-import ParameterAnswer from 'classes/ParameterAnswer';
-import Parameter from 'classes/Parameter';
-import TextAnswer from 'classes/TextAnswer';
-import { EuiButton } from '@elastic/eui';
 import QuestionMeta from './QuestionMeta';
-import { EuiSelectable } from '@elastic/eui';
-import { EuiPopoverTitle } from '@elastic/eui';
+import { Tag } from 'antd';
+import { StyledDivider } from 'styles/layout';
+import QuestionVoteParameterDropdown from './QuestionVoteParameterDropdown';
+import { QuestionIdContext } from './Station';
+import 'antd/es/tag/style/css';
+import TextAnswer from 'classes/TextAnswer';
+import UserAnswer from 'classes/UserAnswer';
+import Question from 'classes/Question';
+import Station from 'classes/Station';
 
-export interface QuestionAnswersProps {
-  index: number;
-}
+export interface QuestionAnswersProps {}
 
-const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ index }) => {
+const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
   const [text, setText] = useState('');
+  const [showMissing, setShowMissing] = useState(false);
+  const questionId = useContext(QuestionIdContext);
+  const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
   const stationIndex = useSelector((state: ReduxState) => state.quiz.stationIndex);
-  const { station, questionIndex } = useSelector(
-    (state: ReduxState) => state.quiz.items[stationIndex]
-  );
-  const question = station.questions[index];
-  const answers = useSelector((state: ReduxState) =>
-    state.quiz.parameterAnswers.filter((answer) => answer.questionId === question.id)
+  const quizItems = useSelector((state: ReduxState) => state.quiz.quizItems);
+  const { station, questionIndex } = quizItems[stationIndex];
+  const question = useSelector((state: ReduxState) =>
+    state.quiz.questions.find((question) => question.id === questionId)
   );
   const currentQuestionIndex = station.questions.findIndex(
     (stationQuestion) => stationQuestion.id === question.id
   );
-  const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
-  const answerParameterIds = answers.map((answer) => answer.parameterId);
-  const missingParameters = question.parameters.filter(
-    (questionParameter) => !answerParameterIds.includes(questionParameter.parameter.id)
+  const userAnswers = useSelector((state: ReduxState) =>
+    state.quiz.userAnswers.filter((answer) => answer.questionId === question.id)
   );
-  const missingAnswersCount = missingParameters.length;
-  const items = answers.map((answer) => ({
-    answer,
-    questionParameter: question.parameters.find(
-      (questionParameter) => questionParameter.parameter.id === answer.parameterId
-    ),
-    parameter: parameters.find((parameter) => parameter.id === answer.parameterId)
-  }));
+  const userAnswerParameterIds = userAnswers.map((userAnswer) => userAnswer.parameterId);
+  const showToolbox = useSelector((state: ReduxState) => state.settings.showToolbox);
 
-  const handleGotIt = (data: ParameterAnswer) => {
-    ParameterAnswer.answer(data);
-  };
+  const correct = question.answers.filter((questionAnswer) =>
+    userAnswers.some((userAnswer) =>
+      questionAnswer.parameters.some((parameter) => userAnswer.parameterId === parameter.id)
+    )
+  );
+  const wrong = userAnswers.filter((userAnswer) =>
+    question.answers.every((answer) =>
+      answer.parameters.every((parameter) => parameter.id !== userAnswer.parameterId)
+    )
+  );
+  const withoutParametersCount = question.answers.filter((answer) => answer.votes.length === 0)
+    .length;
 
-  const handleForwards = () => {
-    for (let missing of missingParameters) {
-      ParameterAnswer.answer({
-        parameterId: missing.parameter.id,
-        giveUp: true,
-        questionId: question.id,
-        stationId: station.id
-      });
-    }
-    TextAnswer.answer({ questionId: question.id, text });
-    ParameterAnswer.submitAnswers();
-    Question.nextQuestion(station.id);
-  };
+  const missingAnswers = question.answers.filter(
+    (answer) =>
+      !answer.parameters.some((parameter) => userAnswerParameterIds.includes(parameter.id))
+  );
+  const missingAnswersCount = missingAnswers.length;
 
   const columns = [
     {
-      name: 'Svar',
-      render: (item: {
-        parameter: Parameter;
-        questionParameter: QuestionParameter;
-        answer: ParameterAnswer;
-      }) => {
-        const popup = (
-          <Popup hoverable position="top center" trigger={<Icon name="exclamation" />}>
-            <EuiSelectable
-              searchable
-              singleSelection
-              searchProps={{
-                placeholder: 'Søg...',
-                compressed: true
-              }}
-              options={parameters.map((parameter) => ({
-                label: parameter.name,
-                key: parameter.id.toString(),
-                value: parameter.id.toString()
-              }))}
-            >
-              {(list, search) => (
-                <div style={{ width: 240 }}>
-                  <EuiPopoverTitle>{search}</EuiPopoverTitle>
-                  {list}
-                </div>
-              )}
-            </EuiSelectable>
-          </Popup>
-        );
-
-        if (!item.questionParameter)
-          return (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-                alignItems: 'center'
-              }}
-            >
-              <span style={{ color: 'red' }}>
-                <Icon name="close" color="red" /> {item.parameter.name}
-              </span>
-              {popup}
-            </div>
-          );
-        if (item.answer.giveUp)
-          return (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-                alignItems: 'center'
-              }}
-            >
-              <span style={{ color: 'orange' }}>
-                <Icon name="question" color="orange" /> {item.parameter.name.toTitleCase()}
-              </span>
-              {popup}
-            </div>
-          );
-        return (
-          <span style={{ color: 'green' }}>
-            <Icon name="checkmark" color="green" /> {item.parameter.name.toTitleCase()}
-          </span>
-        );
-      }
-    },
-    {
-      name: 'Detaljer',
-      render: (item: {
-        parameter: Parameter;
-        questionParameter: QuestionParameter;
-        answer: ParameterAnswer;
-      }) => item.questionParameter?.value
-    },
-    {
-      name: 'Point',
-      render: (item: {
-        parameter: Parameter;
-        questionParameter: QuestionParameter;
-        answer: ParameterAnswer;
-      }) => {
-        if (!item.questionParameter) return 0;
-        if (item.answer.giveUp) return `${item.questionParameter.point} point mistet`;
-        return item.questionParameter.point;
-      }
-    },
-    {
-      name: 'Valg',
-      render: (item: {
-        parameter: Parameter;
-        questionParameter: QuestionParameter;
-        answer: ParameterAnswer;
-      }) => (
-        <EuiButton
-          color="text"
-          size="s"
-          onClick={() =>
-            handleGotIt({
-              giveUp: !item.answer.giveUp,
-              questionId: question.id,
-              parameterId: item.parameter.id,
-              stationId: station.id
-            })
-          }
-        >
-          {item.answer.giveUp ? 'Overvejet' : 'Ikke overvejet'}
-        </EuiButton>
+      name: 'Parameters',
+      render: (item) => (
+        <div style={{ textAlign: 'left' }}>
+          {item.parameters.map((parameter) => (
+            <Tag color="blue">{parameter.name.toTitleCase()}</Tag>
+          ))}
+          <QuestionVoteParameterDropdown answerId={item.id} />
+        </div>
       )
+    },
+    {
+      name: 'Description',
+      render: (item) => <p style={{ textAlign: 'left' }}>{item.value}</p>
+    },
+    {
+      name: 'Points',
+      field: 'point'
     }
   ];
+
+  const handleNextQuestion = () => {
+    TextAnswer.answer({ questionId: question.id, text });
+    UserAnswer.submitAnswers();
+    Question.nextQuestion(station.id);
+  };
+
+  const handleNextStation = () => {
+    Station.changeStationIndex(stationIndex + 1);
+  };
 
   return (
     <div>
@@ -191,19 +98,41 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = ({ index }) => {
         disabled={missingAnswersCount === 0 || questionIndex > currentQuestionIndex}
       />
       <QuestionMeta />
-      {missingAnswersCount > 1 && (
-        <div style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '14px' }}>Du mangler {missingAnswersCount} værdier.</p>
-          <Divider />
-        </div>
-      )}
-      {items.length > 0 && (
-        <>
-          <EuiInMemoryTable sorting items={items} columns={columns} />
-          <Divider />
-        </>
-      )}
-      <ForwardButton handleForwards={handleForwards} index={index} />
+      <div style={{ textAlign: 'center' }}>
+        <p style={{ fontSize: '14px' }}>Du mangler {missingAnswersCount} værdier.</p>
+        <Divider />
+        {correct.length > 0 && <EuiInMemoryTable columns={columns} items={correct} />}
+        <StyledDivider small />
+        <Button
+          disabled={missingAnswers.length < 1 && !showMissing}
+          size="tiny"
+          basic
+          onClick={() => setShowMissing(!showMissing)}
+        >
+          {showMissing ? 'Hide' : 'Show'} missing
+        </Button>
+        {showMissing && <EuiInMemoryTable columns={columns} items={missingAnswers} />}
+        <Divider />
+      </div>
+      Forkerte:{' '}
+      {wrong.map((answer) => (
+        <Tag color="red">
+          {parameters.find((parameter) => parameter.id === answer.parameterId).name.toTitleCase()}
+        </Tag>
+      ))}
+      <Divider />
+      {questionIndex === currentQuestionIndex &&
+        station.questions.length - 1 > currentQuestionIndex && (
+          <Button onClick={handleNextQuestion} color="blue" basic={missingAnswersCount !== 0} fluid>
+            Continue
+          </Button>
+        )}
+      {station.questions.length - 1 === currentQuestionIndex &&
+        quizItems.length - 1 < stationIndex && (
+          <Button onClick={handleNextStation} fluid basic={missingAnswersCount !== 0} color="green">
+            Next station
+          </Button>
+        )}
     </div>
   );
 };

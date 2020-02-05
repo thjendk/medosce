@@ -1,27 +1,32 @@
-import Parameter from './Parameter';
 import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
-import ParameterAnswer from './ParameterAnswer';
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
 import adminReducer from 'redux/reducers/admin';
 import Station from './Station';
-import QuestionType from './QuestionType';
+import Parameter from './Parameter';
+import User from './User';
 
 interface Question {
   id: number;
   questionNumber: number;
   text: string;
   station: Station;
-  parameters: QuestionParameter[];
-  questionTypes: QuestionType[];
+  answers: QuestionAnswer[];
 }
 
-export interface QuestionParameter {
+export interface QuestionAnswer {
   id: number;
   value: string;
   point: number;
+  votes: QuestionParameterVote[];
+  parameters: Parameter[];
+}
+
+export interface QuestionParameterVote {
   parameter: Parameter;
+  user: User;
+  vote: number;
 }
 
 export interface QuestionInput {
@@ -31,14 +36,40 @@ export interface QuestionInput {
   questionTypeIds: number[];
 }
 
-export interface QuestionParameterInput {
+export interface QuestionAnswerInput {
   questionId: number;
-  parameterId: number;
   value: string;
   point: number;
 }
 
+export interface ParameterVoteInput {
+  questionAnswerId: number;
+  parameterId: number;
+  vote: number;
+}
+
 class Question {
+  static questionAnswerFragment = gql`
+    fragment QuestionAnswer on QuestionAnswer {
+      id
+      value
+      point
+      parameters {
+        ...Parameter
+      }
+      votes {
+        parameter {
+          ...Parameter
+        }
+        user {
+          id
+        }
+        vote
+      }
+    }
+    ${Parameter.fragment}
+  `;
+
   static fragment = gql`
     fragment Question on Question {
       id
@@ -47,15 +78,11 @@ class Question {
       station {
         id
       }
-      parameters {
-        ...QuestionParameter
-      }
-      questionTypes {
-        ...QuestionType
+      answers {
+        ...QuestionAnswer
       }
     }
-    ${Parameter.questionParameterFragment}
-    ${QuestionType.fragment}
+    ${Question.questionAnswerFragment}
   `;
 
   static fetchAll = async () => {
@@ -74,8 +101,8 @@ class Question {
 
   static nextQuestion = (stationId: number) => {
     const state = store.getState();
-    const stationIndex = state.quiz.items.findIndex((item) => item.station.id === stationId);
-    const nextQuestionNumber = state.quiz.items[stationIndex].questionIndex + 1;
+    const stationIndex = state.quiz.quizItems.findIndex((item) => item.station.id === stationId);
+    const nextQuestionNumber = state.quiz.quizItems[stationIndex].questionIndex + 1;
     store.dispatch(
       quizReducer.actions.setQuestionNumber({ stationId, questionNumber: nextQuestionNumber })
     );
@@ -109,32 +136,52 @@ class Question {
     return store.dispatch(adminReducer.actions.addQuestion(question));
   };
 
-  static addParameter = async (data: QuestionParameterInput) => {
+  static addAnswer = async (data: QuestionAnswerInput) => {
     const mutation = gql`
-      mutation($data: QuestionParameterInput) {
-        createQuestionParameter(data: $data) {
+      mutation($data: QuestionAnswerInput) {
+        createQuestionAnswer(data: $data) {
           ...Question
         }
       }
       ${Question.fragment}
     `;
 
-    const question = await Apollo.mutate<Question>('createQuestionParameter', mutation, { data });
+    const question = await Apollo.mutate<Question>('createQuestionAnswer', mutation, { data });
     return store.dispatch(adminReducer.actions.addQuestion(question));
   };
 
-  static deleteParameter = async (id: number) => {
+  static deleteAnswer = async (id: number) => {
     const mutation = gql`
       mutation($id: Int) {
-        deleteQuestionParameter(id: $id) {
+        deleteQuestionAnswer(id: $id) {
           ...Question
         }
       }
       ${Question.fragment}
     `;
 
-    const question = await Apollo.mutate<Question>('deleteQuestionParameter', mutation, { id });
+    const question = await Apollo.mutate<Question>('deleteQuestionAnswer', mutation, { id });
     return store.dispatch(adminReducer.actions.addQuestion(question));
+  };
+
+  static giveUp = async (questionId: number) => {
+    store.dispatch(quizReducer.actions.addGiveUpQuestionId(questionId));
+  };
+
+  static createOrUpdateVote = async (data: ParameterVoteInput) => {
+    const mutation = gql`
+      mutation($data: ParameterVoteInput) {
+        createOrUpdateParameterVote(data: $data) {
+          ...Question
+        }
+      }
+      ${Question.fragment}
+    `;
+
+    const question = await Apollo.mutate<Question>('createOrUpdateParameterVote', mutation, {
+      data
+    });
+    store.dispatch(quizReducer.actions.addQuestion(question));
   };
 }
 

@@ -2,12 +2,10 @@ import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
 import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
-import Category from './Category';
 
 interface Parameter {
   id: number;
   name: string;
-  categories: Category[];
   parent: Parameter;
 }
 
@@ -21,26 +19,10 @@ class Parameter {
     fragment Parameter on Parameter {
       id
       name
-      categories {
-        ...Category
-      }
       parent {
         id
       }
     }
-    ${Category.fragment}
-  `;
-
-  static questionParameterFragment = gql`
-    fragment QuestionParameter on QuestionParameter {
-      id
-      value
-      point
-      parameter {
-        ...Parameter
-      }
-    }
-    ${Parameter.fragment}
   `;
 
   static fetchAll = async () => {

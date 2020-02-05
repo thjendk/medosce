@@ -1,14 +1,14 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
 import Parameters from 'models/parameters.model';
-import ParametersCategories from 'models/parametersCategories.model';
+import QuestionAnswerParameterVote from 'models/questionAnswerParameterVote';
+import QuestionAnswer from 'models/questionAnswer.model';
 
 export const typeDefs = gql`
   type Parameter {
     id: Int
     name: String
     parent: Parameter
-    categories: [Category]
   }
 
   extend type Query {
@@ -18,11 +18,24 @@ export const typeDefs = gql`
   extend type Mutation {
     createParameter(data: ParameterInput): Parameter
     updateParameter(id: Int, data: ParameterInput): Parameter
+    createOrUpdateParameterVote(data: ParameterVoteInput): Question
   }
 
   input ParameterInput {
     name: String
     categoryIds: [Int]
+  }
+
+  type ParameterVote {
+    parameter: Parameter
+    user: User
+    vote: Int
+  }
+
+  input ParameterVoteInput {
+    questionAnswerId: Int
+    parameterId: Int
+    vote: Int
   }
 `;
 
@@ -36,10 +49,6 @@ export const resolvers = {
     parent: async ({ id }, _, ctx: Context) => {
       const parameter = await ctx.parametersLoader.load(id);
       return { id: parameter.parentId };
-    },
-    categories: async ({ id }) => {
-      const categories = await ParametersCategories.query().where({ parameterId: id });
-      return categories.map((category) => ({ id: category.categoryId }));
     }
   },
 
@@ -56,22 +65,20 @@ export const resolvers = {
       return { id: parameter.parameterId };
     },
     updateParameter: async (root, { id, data }) => {
-      // Find parameter
-      const parameter = await Parameters.query().findById(id);
-      if (!parameter) throw new Error('Parameter not found');
-
-      // Joins
-      if (data.categoryIds) {
-        await ParametersCategories.updateRelations(parameter.parameterId, data.categoryIds);
-        delete data.categoryIds;
-      }
-
-      // Update parameter without joins
-      await parameter
-        .$query()
-        .updateAndFetch(data)
-        .skipUndefined();
+      const parameter = await Parameters.query().updateAndFetchById(id, data);
       return { id: parameter.parameterId };
+    },
+    createOrUpdateParameterVote: async (root, { data }, ctx: Context) => {
+      const { parameterId, questionAnswerId, vote } = data;
+      const questionAnswer = await QuestionAnswer.query().findOne({ questionAnswerId });
+      await QuestionAnswerParameterVote.query().insertAndFetch({
+        questionAnswerId,
+        parameterId,
+        vote,
+        userId: ctx.user.userId
+      });
+      ctx.questionsLoader.clear(questionAnswer.questionId);
+      return { id: questionAnswer.questionId };
     }
   }
 };

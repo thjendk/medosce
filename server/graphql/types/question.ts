@@ -1,8 +1,8 @@
 import { gql } from 'apollo-server-express';
 import { Context } from 'config/apolloServer';
-import QuestionParameters from 'models/questionParameters.model';
+import QuestionAnswer from 'models/questionAnswer.model';
 import Questions from 'models/questions.model';
-import QuestionsQuestionType from 'models/questionsQuestionType.model';
+import QuestionAnswerParameterVote from 'models/questionAnswerParameterVote';
 
 export const typeDefs = gql`
   type Question {
@@ -10,15 +10,15 @@ export const typeDefs = gql`
     questionNumber: Int
     text: String
     station: Station
-    parameters: [QuestionParameter]
-    questionTypes: [QuestionType]
+    answers: [QuestionAnswer]
   }
 
-  type QuestionParameter {
+  type QuestionAnswer {
     id: Int
     value: String
     point: Float
-    parameter: Parameter
+    votes: [ParameterVote]
+    parameters: [Parameter]
   }
 
   extend type Query {
@@ -28,8 +28,8 @@ export const typeDefs = gql`
   extend type Mutation {
     createQuestion(data: QuestionInput): Question
     updateQuestion(id: Int, data: QuestionInput): Question
-    createQuestionParameter(data: QuestionParameterInput): Question
-    deleteQuestionParameter(id: Int): Question
+    createQuestionAnswer(data: QuestionAnswerInput): Question
+    deleteQuestionAnswer(id: Int): Question
   }
 
   input QuestionInput {
@@ -39,9 +39,8 @@ export const typeDefs = gql`
     questionTypeIds: [Int]
   }
 
-  input QuestionParameterInput {
+  input QuestionAnswerInput {
     questionId: Int
-    parameterId: Int
     value: String
     point: Float
   }
@@ -62,18 +61,39 @@ export const resolvers = {
       const question = await ctx.questionsLoader.load(id);
       return { id: question.stationId };
     },
-    parameters: async ({ id }, _, ctx: Context) => {
-      const parameters = await QuestionParameters.query().where({ questionId: id });
-      return parameters.map((questionParameter) => ({
-        id: questionParameter.questionParameterId,
-        value: questionParameter.value,
-        point: questionParameter.point,
-        parameter: { id: questionParameter.parameterId }
+    answers: async ({ id }, _, ctx: Context) => {
+      const answers = await QuestionAnswer.query().where({ questionId: id });
+      return answers.map((answer) => ({ id: answer.questionAnswerId }));
+    }
+  },
+
+  QuestionAnswer: {
+    id: ({ id }) => id,
+    value: async ({ id }, _, ctx: Context) => {
+      const questionAnswer = await ctx.questionAnswerLoader.load(id);
+      return questionAnswer.value;
+    },
+    point: async ({ id }, _, ctx: Context) => {
+      const questionAnswer = await ctx.questionAnswerLoader.load(id);
+      return questionAnswer.point;
+    },
+    votes: async ({ id }, _, ctx: Context) => {
+      const votes = await QuestionAnswerParameterVote.query().where({ questionAnswerId: id });
+      return votes.map((vote) => ({
+        parameter: { id: vote.parameterId },
+        user: { id: vote.userId },
+        vote: vote.vote
       }));
     },
-    questionTypes: async ({ id }) => {
-      const joins = await QuestionsQuestionType.query().where({ questionId: id });
-      return joins.map((join) => ({ id: join.questionTypeId }));
+    parameters: async ({ id }, _, ctx: Context) => {
+      const votes = await QuestionAnswerParameterVote.query()
+        .where({ questionAnswerId: id })
+        .groupBy('parameterId')
+        .sum('vote as sum')
+        .having('sum', '>', '-1')
+        .orderBy('sum', 'desc')
+        .select('parameterId');
+      return votes.map((vote) => ({ id: vote.parameterId }));
     }
   },
 
@@ -90,28 +110,17 @@ export const resolvers = {
       return { id: question.questionId };
     },
     updateQuestion: async (root, { id, data }) => {
-      // Find question
-      const question = await Questions.query().findById(id);
-      if (!question) throw new Error('Question not found');
-
-      // Joins
-      if (data.questionTypeIds) {
-        await QuestionsQuestionType.updateRelations(question.questionId, data.questionTypeIds);
-        delete data.questionTypeIds;
-      }
-
-      // Update rest
-      await question.$query().update(data);
+      const question = await Questions.query().updateAndFetchById(id, data);
       return { id: question.questionId };
     },
-    createQuestionParameter: async (root, { data }) => {
-      const questionParameter = await QuestionParameters.query().insertAndFetch(data);
-      return { id: questionParameter.questionId };
+    createQuestionAnswer: async (root, { data }) => {
+      const questionAnswer = await QuestionAnswer.query().insertAndFetch(data);
+      return { id: questionAnswer.questionId };
     },
-    deleteQuestionParameter: async (root, { id }) => {
-      const questionParameter = await QuestionParameters.query().findById(id);
-      await questionParameter.$query().delete();
-      return { id: questionParameter.questionId };
+    deleteQuestionAnswer: async (root, { id }) => {
+      const questionAnswer = await QuestionAnswer.query().findById(id);
+      await questionAnswer.$query().delete();
+      return { id: questionAnswer.questionId };
     }
   }
 };
