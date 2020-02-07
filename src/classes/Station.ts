@@ -1,10 +1,10 @@
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
-import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
 import Question from './Question';
 import ExamSet from './ExamSet';
 import adminReducer from 'redux/reducers/admin';
+import store from 'config/persistStore';
 
 interface Station {
   id: number;

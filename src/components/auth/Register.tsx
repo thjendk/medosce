@@ -15,14 +15,14 @@ const Register: React.FC<RegisterProps> = () => {
   const handleRegister = async (values: FormikValues) => {
     const { username, password, email, repeatPassword } = values;
     // Validation
-    if (!email || !username || !password || !repeatPassword) {
+    if (!username || !password || !repeatPassword) {
       return setErrorMessage('Du skal opgive alle værdier');
     }
     if (password !== repeatPassword) {
       return setErrorMessage('Kodeord skal være det samme');
     }
     const emailRegex = /[[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-    if (!emailRegex.test(email)) {
+    if (email && !emailRegex.test(email)) {
       return setErrorMessage('Emailen er ikke en korrekt email');
     }
 
@@ -73,7 +73,6 @@ const Register: React.FC<RegisterProps> = () => {
                 name="email"
                 value={values.email}
                 onChange={handleChange}
-                required
                 icon="at"
                 iconPosition="left"
                 placeholder="Email"

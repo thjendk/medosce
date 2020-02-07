@@ -1,32 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import apolloClient from './apolloClient';
+import apolloClient from './config/apolloClient';
 import { ApolloProvider } from '@apollo/react-hooks';
-import rootReducer from 'redux/reducers';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import store from 'config/persistStore';
+import LoadingPage from 'components/misc/LoadingPage';
 import './index.css';
-
-export const store = configureStore({
-  reducer: rootReducer,
-  devTools: process.env.NODE_ENV === 'production' ? false : true
-});
 
 /* eslint-disable-next-line */
 String.prototype.toTitleCase = function() {
   return this[0].toUpperCase() + this.substring(1);
 };
 
+const persistor = persistStore(store);
+
 ReactDOM.render(
   <Provider store={store}>
-    <ApolloProvider client={apolloClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ApolloProvider>
+    <PersistGate loading={<LoadingPage />} persistor={persistor}>
+      <ApolloProvider client={apolloClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ApolloProvider>
+    </PersistGate>
   </Provider>,
   document.getElementById('root')
 );

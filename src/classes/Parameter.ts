@@ -1,17 +1,26 @@
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
-import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
+import Question from './Question';
+import store from 'config/persistStore';
 
 interface Parameter {
   id: number;
   name: string;
   parent: Parameter;
+  isForcedSubMenu: boolean;
 }
 
 export interface ParameterInput {
   name: string;
-  categoryIds: number[];
+  parentId: number;
+  isForcedSubMenu: boolean;
+}
+
+export interface ParameterVoteInput {
+  questionAnswerId: number;
+  parameterId: number;
+  vote: number;
 }
 
 class Parameter {
@@ -22,6 +31,7 @@ class Parameter {
       parent {
         id
       }
+      isForcedSubMenu
     }
   `;
 
@@ -65,6 +75,38 @@ class Parameter {
 
     const parameter = await Apollo.mutate<Parameter>('updateParameter', mutation, { id, data });
     store.dispatch(quizReducer.actions.addParameter(parameter));
+  };
+
+  static suggest = async (data: ParameterInput) => {
+    const state = store.getState();
+
+    const mutation = gql`
+      mutation SuggestParameter($data: ParameterInput) {
+        suggestParameter(data: $data)
+      }
+    `;
+
+    await Apollo.mutate('suggestParameter', mutation, { data });
+    if (state.auth.user.role.id === 1) {
+      await Parameter.fetchAll();
+    }
+    return 'Success';
+  };
+
+  static vote = async (data: ParameterVoteInput) => {
+    const mutation = gql`
+      mutation VoteParameter($data: ParameterVoteInput) {
+        createOrUpdateParameterVote(data: $data) {
+          ...Question
+        }
+      }
+      ${Question.fragment}
+    `;
+
+    const question = await Apollo.mutate<Question>('createOrUpdateParameterVote', mutation, {
+      data
+    });
+    store.dispatch(quizReducer.actions.addQuestion(question));
   };
 }
 

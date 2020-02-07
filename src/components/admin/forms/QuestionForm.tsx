@@ -3,19 +3,29 @@ import { EuiText, EuiForm, EuiFormRow, EuiFieldText, EuiButton } from '@elastic/
 import { useFormik } from 'formik';
 import Question, { QuestionInput } from 'classes/Question';
 import { EuiTextArea } from '@elastic/eui';
+import { useSelector } from 'react-redux';
+import { ReduxState } from 'redux/reducers';
+import _ from 'lodash';
 
 export interface QuestionFormProps {
   stationId: number;
 }
 
 const QuestionForm: React.SFC<QuestionFormProps> = ({ stationId }) => {
+  const questions = useSelector((state: ReduxState) =>
+    state.admin.questions.filter((question) => question.station.id === stationId)
+  );
+  const nextQuestionNumber = _.maxBy(questions, (question) => question.questionNumber)
+    .questionNumber;
+
   const formik = useFormik({
     initialValues: {
       stationId: stationId,
       text: '',
-      questionNumber: 0
+      questionNumber: nextQuestionNumber + 1
     },
-    onSubmit: (values) => handleSubmit(values)
+    onSubmit: (values) => handleSubmit(values),
+    enableReinitialize: true
   });
 
   const handleSubmit = async (data: Partial<QuestionInput>) => {

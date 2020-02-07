@@ -1,4 +1,3 @@
-import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
@@ -6,6 +5,8 @@ import adminReducer from 'redux/reducers/admin';
 import Station from './Station';
 import Parameter from './Parameter';
 import User from './User';
+import selectionReducer from 'redux/reducers/selection';
+import store from 'config/persistStore';
 
 interface Question {
   id: number;
@@ -24,6 +25,7 @@ export interface QuestionAnswer {
 }
 
 export interface QuestionParameterVote {
+  questionAnswer: QuestionAnswer;
   parameter: Parameter;
   user: User;
   vote: number;
@@ -58,6 +60,9 @@ class Question {
         ...Parameter
       }
       votes {
+        questionAnswer {
+          id
+        }
         parameter {
           ...Parameter
         }
@@ -182,6 +187,21 @@ class Question {
       data
     });
     store.dispatch(quizReducer.actions.addQuestion(question));
+  };
+
+  static fetchCounts = async () => {
+    const query = gql`
+      query Counts {
+        questionCount
+        parameterCount
+      }
+    `;
+
+    const counts = await Apollo.query<{ parametersCount: number; questionCount: number }>(
+      '',
+      query
+    );
+    store.dispatch(selectionReducer.actions.setSelectionCounts(counts));
   };
 }
 

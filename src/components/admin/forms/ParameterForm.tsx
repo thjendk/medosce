@@ -9,7 +9,8 @@ const ParameterForm: React.SFC<ParameterFormProps> = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      categoryIds: []
+      parentId: null,
+      isForcedSubMenu: false
     },
     onSubmit: (values) => handleSubmit(values)
   });

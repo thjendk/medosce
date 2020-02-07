@@ -3,8 +3,8 @@ import { Model } from 'objection';
 interface Parameters {
   parameterId: number;
   name: string;
-  categoryId: number;
   parentId: number;
+  isForcedSubMenu: 1 | 0;
 }
 
 class Parameters extends Model {

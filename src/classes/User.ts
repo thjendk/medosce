@@ -1,8 +1,8 @@
 import Apollo from './Apollo';
 import { gql } from 'apollo-boost';
-import { store } from 'index';
 import authReducer from 'redux/reducers/auth';
 import Role from './Role';
+import store from 'config/persistStore';
 
 interface User {
   id: number;

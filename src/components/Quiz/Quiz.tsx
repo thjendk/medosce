@@ -10,6 +10,7 @@ import StationSummary from './StationSummary';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
 import { EuiTitle } from '@elastic/eui';
+import LoadingPage from 'components/misc/LoadingPage';
 
 export interface QuizProps {}
 
@@ -27,7 +28,7 @@ const Quiz: React.SFC<QuizProps> = () => {
     fetchQuiz();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingPage />;
   if (stations.length === 0)
     return (
       <EuiTitle>

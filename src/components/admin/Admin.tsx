@@ -7,6 +7,7 @@ import Question from 'classes/Question';
 import Routes from 'classes/Routes';
 import Parameter from 'classes/Parameter';
 import AdminStats from './AdminStats';
+import LoadingPage from 'components/misc/LoadingPage';
 
 export interface AdminProps {}
 
@@ -25,7 +26,7 @@ const Admin: React.SFC<AdminProps> = () => {
     fetchAll();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingPage />;
   return (
     <div>
       <AdminStats />

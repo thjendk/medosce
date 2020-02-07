@@ -26,7 +26,7 @@ const QuestionParameterForm: React.SFC<QuestionParameterFormProps> = ({ question
 
   const handleSubmit = async (values: QuestionAnswerInput) => {
     await Question.addAnswer(values);
-    formik.resetForm();
+    formik.setFieldValue('value', '');
   };
 
   return (
