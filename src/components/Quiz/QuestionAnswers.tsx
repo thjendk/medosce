@@ -138,14 +138,11 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={correct} />
         )}
         <StyledDivider small />
-        <Button
-          disabled={missingAnswers.length < 1 && !showMissing}
-          size="tiny"
-          basic
-          onClick={() => setShowMissing(!showMissing)}
-        >
-          {showMissing ? 'Skjul' : 'Vis'} manglende
-        </Button>
+        {missingAnswers.length < 1 && !showMissing && (
+          <Button size="tiny" basic onClick={() => setShowMissing(!showMissing)}>
+            {showMissing ? 'Skjul' : 'Vis'} manglende
+          </Button>
+        )}
         {showMissing && (
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={missingAnswers} />
         )}
