@@ -2,20 +2,32 @@ import React from 'react';
 import { EuiForm, EuiFormRow, EuiFieldText, EuiTextArea, EuiButton } from '@elastic/eui';
 import Station, { StationInput } from 'classes/Station';
 import { useFormik } from 'formik';
+import { useSelector } from 'react-redux';
+import { ReduxState } from 'redux/reducers';
 
 export interface StationFormProps {
   examSetId: number;
 }
 
 const StationForm: React.SFC<StationFormProps> = ({ examSetId }) => {
+  const examSet = useSelector((state: ReduxState) =>
+    state.admin.examSets.find((examSet) => examSet.id === examSetId)
+  );
+  const nextStationNumber = examSet.stations.reduce(
+    (largest, current) =>
+      (largest = current.stationNumber > largest ? current.stationNumber : largest),
+    0
+  );
+
   const formik = useFormik({
     initialValues: {
       globalScore: 0,
-      stationNumber: 0,
+      stationNumber: nextStationNumber + 1,
       intro: '',
       examSetId: examSetId
     },
-    onSubmit: (values) => handleSubmit(values)
+    onSubmit: (values) => handleSubmit(values),
+    enableReinitialize: true
   });
 
   const handleSubmit = async (values: StationInput) => {
