@@ -23,7 +23,6 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
   const question = useSelector((state: ReduxState) =>
     state.quiz.questions.find((question) => question.id === questionId)
   );
-  const user = useSelector((state: ReduxState) => state.auth.user);
   const answer = question.answers.find((answer) => answer.id === answerId);
   const alreadyVotedIds = answer.parameters.map((parameter) => parameter.id);
   const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
@@ -121,21 +120,19 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
           </Button>
         </Modal.Actions>
       </Modal>
-      {user && (
-        <Dropdown
-          placement="topCenter"
-          overlay={
-            <Menu forceSubMenuRender>
-              {parentParameters.map((parameter) => createChildren(parameter))}
-              <Menu.Divider />
-              <Menu.Item onClick={() => setAddingOverMenu(true)}>+ Foreslå menu</Menu.Item>
-              <Menu.Item>Foreslå anden rettelse</Menu.Item>
-            </Menu>
-          }
-        >
-          <Tag>+ Parameter</Tag>
-        </Dropdown>
-      )}
+      <Dropdown
+        placement="topCenter"
+        overlay={
+          <Menu forceSubMenuRender>
+            {parentParameters.map((parameter) => createChildren(parameter))}
+            <Menu.Divider />
+            <Menu.Item onClick={() => setAddingOverMenu(true)}>+ Foreslå menu</Menu.Item>
+            <Menu.Item>Foreslå anden rettelse</Menu.Item>
+          </Menu>
+        }
+      >
+        <Tag style={{ marginTop: '5px' }}>+ Parameter</Tag>
+      </Dropdown>
     </>
   );
 };

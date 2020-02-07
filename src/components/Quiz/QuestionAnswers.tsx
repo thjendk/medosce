@@ -70,16 +70,17 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
             );
             const isUpVoted = votes.find((vote) => vote.user.id === user.id)?.vote === 1;
             const isDownVoted = votes.find((vote) => vote.user.id === user.id)?.vote === -1;
+            const voteSum = votes.reduce((sum, vote) => (sum += vote.vote), 0);
 
             return (
-              <Tag>
+              <Tag style={{ marginTop: '5px' }}>
                 {parameter.name.toTitleCase()}
                 {user && (
                   <>
                     {' '}
                     <Icon
-                      style={{ cursor: 'pointer', color: isUpVoted ? 'green' : null }}
                       disabled={isUpVoted}
+                      style={{ cursor: 'pointer', color: isUpVoted ? 'green' : null }}
                       onClick={() => handleVote(parameter.id, item.id, 1)}
                       name="arrow up"
                     />
@@ -91,11 +92,11 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
                     />
                   </>
                 )}
-                {votes.length}
+                {voteSum}
               </Tag>
             );
           })}
-          <QuestionVoteParameterDropdown answerId={item.id} />
+          {user && <QuestionVoteParameterDropdown answerId={item.id} />}
         </div>
       )
     },
@@ -133,7 +134,9 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
       <div style={{ textAlign: 'center' }}>
         <p style={{ fontSize: '14px' }}>Du mangler {missingAnswersCount} værdier.</p>
         <Divider />
-        {correct.length > 0 && <EuiInMemoryTable columns={columns} items={correct} />}
+        {correct.length > 0 && (
+          <EuiInMemoryTable tableLayout="auto" columns={columns} items={correct} />
+        )}
         <StyledDivider small />
         <Button
           disabled={missingAnswers.length < 1 && !showMissing}
@@ -143,7 +146,9 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
         >
           {showMissing ? 'Hide' : 'Show'} missing
         </Button>
-        {showMissing && <EuiInMemoryTable columns={columns} items={missingAnswers} />}
+        {showMissing && (
+          <EuiInMemoryTable tableLayout="auto" columns={columns} items={missingAnswers} />
+        )}
         <Divider />
       </div>
       Forkerte:{' '}

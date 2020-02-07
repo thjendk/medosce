@@ -5,7 +5,6 @@ import Question, { QuestionInput } from 'classes/Question';
 import { EuiTextArea } from '@elastic/eui';
 import { useSelector } from 'react-redux';
 import { ReduxState } from 'redux/reducers';
-import _ from 'lodash';
 
 export interface QuestionFormProps {
   stationId: number;
@@ -15,8 +14,11 @@ const QuestionForm: React.SFC<QuestionFormProps> = ({ stationId }) => {
   const questions = useSelector((state: ReduxState) =>
     state.admin.questions.filter((question) => question.station.id === stationId)
   );
-  const nextQuestionNumber = _.maxBy(questions, (question) => question.questionNumber)
-    .questionNumber;
+  const nextQuestionNumber = questions.reduce(
+    (largest, current) =>
+      (largest = current.questionNumber > largest ? current.questionNumber : largest),
+    0
+  );
 
   const formik = useFormik({
     initialValues: {
