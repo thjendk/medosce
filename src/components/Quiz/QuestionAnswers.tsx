@@ -144,14 +144,14 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
           basic
           onClick={() => setShowMissing(!showMissing)}
         >
-          {showMissing ? 'Hide' : 'Show'} missing
+          {showMissing ? 'Skjul' : 'Vis'} manglende
         </Button>
         {showMissing && (
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={missingAnswers} />
         )}
         <Divider />
       </div>
-      Forkerte:{' '}
+      Giver ikke point:{' '}
       {wrong.map((answer) => (
         <Tag color="red">
           {parameters.find((parameter) => parameter.id === answer.parameterId).name.toTitleCase()}
