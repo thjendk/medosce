@@ -66,6 +66,17 @@ class Parameter {
     const parameter = await Apollo.mutate<Parameter>('updateParameter', mutation, { id, data });
     store.dispatch(quizReducer.actions.addParameter(parameter));
   };
+
+  static suggest = async (data: { name: string; parentId: number }) => {
+    const mutation = gql`
+      mutation SuggestParameter($data: SuggestParameterInput) {
+        suggestParameter(data: $data)
+      }
+    `;
+
+    await Apollo.mutate('suggestParameter', mutation, { data });
+    return 'Success';
+  };
 }
 
 export default Parameter;

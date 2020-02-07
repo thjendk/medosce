@@ -7,6 +7,7 @@ class Apollo {
       variables
     });
 
+    if (!name) return res.data;
     return res.data[name] as T;
   };
 
@@ -16,6 +17,7 @@ class Apollo {
       variables
     });
 
+    if (!name) return res.data;
     return res.data[name] as T;
   };
 }

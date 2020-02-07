@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Divider, Button } from 'semantic-ui-react';
+import { Divider, Button, Icon } from 'semantic-ui-react';
 import { ReduxState } from 'redux/reducers';
 import { useSelector } from 'react-redux';
 import { EuiInMemoryTable, EuiTextArea } from '@elastic/eui';
@@ -8,11 +8,11 @@ import { Tag } from 'antd';
 import { StyledDivider } from 'styles/layout';
 import QuestionVoteParameterDropdown from './QuestionVoteParameterDropdown';
 import { QuestionIdContext } from './Station';
-import 'antd/es/tag/style/css';
 import TextAnswer from 'classes/TextAnswer';
 import UserAnswer from 'classes/UserAnswer';
-import Question from 'classes/Question';
+import Question, { QuestionAnswer } from 'classes/Question';
 import Station from 'classes/Station';
+import 'antd/es/tag/style/css';
 
 export interface QuestionAnswersProps {}
 
@@ -34,7 +34,10 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
     state.quiz.userAnswers.filter((answer) => answer.questionId === question.id)
   );
   const userAnswerParameterIds = userAnswers.map((userAnswer) => userAnswer.parameterId);
-  const showToolbox = useSelector((state: ReduxState) => state.settings.showToolbox);
+  const user = useSelector((state: ReduxState) => state.auth.user);
+  const userVotes = question.answers.flatMap((answer) =>
+    answer.votes.filter((vote) => vote.user.id === user.id)
+  );
 
   const correct = question.answers.filter((questionAnswer) =>
     userAnswers.some((userAnswer) =>
@@ -46,8 +49,6 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
       answer.parameters.every((parameter) => parameter.id !== userAnswer.parameterId)
     )
   );
-  const withoutParametersCount = question.answers.filter((answer) => answer.votes.length === 0)
-    .length;
 
   const missingAnswers = question.answers.filter(
     (answer) =>
@@ -58,11 +59,37 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
   const columns = [
     {
       name: 'Parameters',
-      render: (item) => (
+      render: (item: QuestionAnswer) => (
         <div style={{ textAlign: 'left' }}>
-          {item.parameters.map((parameter) => (
-            <Tag color="blue">{parameter.name.toTitleCase()}</Tag>
-          ))}
+          {item.parameters.map((parameter) => {
+            const votes = userVotes.filter(
+              (vote) => vote.parameter.id === parameter.id && item.id === vote.questionAnswer.id
+            );
+            const isUpVoted = votes.find((vote) => vote.user.id === user.id)?.vote === 1;
+            const isDownVoted = votes.find((vote) => vote.user.id === user.id)?.vote === -1;
+
+            return (
+              <Tag>
+                {parameter.name.toTitleCase()}
+                {user && (
+                  <>
+                    {' '}
+                    <Icon
+                      style={{ cursor: 'pointer', color: isUpVoted ? 'green' : null }}
+                      onClick={() => {}}
+                      name="arrow up"
+                    />
+                    <Icon
+                      style={{ cursor: 'pointer', color: isDownVoted ? 'red' : null }}
+                      onClick={() => {}}
+                      name="arrow down"
+                    />
+                  </>
+                )}
+                {votes.length}
+              </Tag>
+            );
+          })}
           <QuestionVoteParameterDropdown answerId={item.id} />
         </div>
       )
@@ -128,7 +155,7 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
           </Button>
         )}
       {station.questions.length - 1 === currentQuestionIndex &&
-        quizItems.length - 1 < stationIndex && (
+        quizItems.length - 1 > stationIndex && (
           <Button onClick={handleNextStation} fluid basic={missingAnswersCount !== 0} color="green">
             Next station
           </Button>

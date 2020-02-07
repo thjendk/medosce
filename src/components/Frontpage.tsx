@@ -1,19 +1,24 @@
 import React from 'react';
+import Selection from './Selection/Selection';
+import { Divider } from 'semantic-ui-react';
 import { CenterText } from 'styles/text';
-import { Button } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
+import StartButton from './Selection/StartButton';
+import QuestionCount from './Selection/QuestionCount';
 
 export interface FrontpageProps {}
 
 const Frontpage: React.FC<FrontpageProps> = () => {
-  const history = useHistory();
-
   return (
-    <CenterText>
-      <Button fluid basic color="blue" onClick={() => history.push('/quiz')}>
-        Demo
-      </Button>
-    </CenterText>
+    <div>
+      <CenterText>
+        <h1 style={{ color: '#004687', fontSize: '3em', fontWeight: 'bold' }}>MedOSCE</h1>
+      </CenterText>
+      <Divider />
+      <QuestionCount />
+      <Selection />
+      <Divider />
+      <StartButton />
+    </div>
   );
 };
 

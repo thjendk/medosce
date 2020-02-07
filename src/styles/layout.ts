@@ -25,3 +25,9 @@ export const QuestionText = styled.div`
 export const StyledDivider = styled.div<{ small?: boolean }>`
   height: ${(props) => (props.small ? '5px' : '15px')};
 `;
+
+export const StyledPageCenterer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

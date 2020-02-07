@@ -10,6 +10,7 @@ import Quiz from 'components/Quiz/Quiz';
 import './App.scss';
 import ProtectedRoute from 'components/auth/ProtectedRoute';
 import Admin from 'components/admin/Admin';
+import LoadingPage from 'components/misc/LoadingPage';
 
 export interface AppProps {}
 
@@ -29,7 +30,7 @@ const App: React.FC<AppProps> = () => {
     <div>
       <Layout>
         <Switch>
-          {fetching && <p>Loading...</p>}
+          {fetching && <LoadingPage />}
           <ProtectedRoute path="/admin" component={Admin} />
           <Route path="/register" component={Register} />
           <Route path="/logout" component={Logout} />

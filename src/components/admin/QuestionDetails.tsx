@@ -23,10 +23,6 @@ const QuestionDetails: React.SFC<QuestionDetailsProps> = () => {
 
   const columns = [
     {
-      field: 'id',
-      name: 'ID'
-    },
-    {
       field: 'value',
       name: 'Value'
     },

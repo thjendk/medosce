@@ -3,6 +3,7 @@ import { Context } from 'config/apolloServer';
 import Parameters from 'models/parameters.model';
 import QuestionAnswerParameterVote from 'models/questionAnswerParameterVote';
 import QuestionAnswer from 'models/questionAnswer.model';
+import ParameterSuggestion from 'models/parameterSuggestion.model';
 
 export const typeDefs = gql`
   type Parameter {
@@ -13,12 +14,14 @@ export const typeDefs = gql`
 
   extend type Query {
     parameters: [Parameter]
+    parameterCount: Int
   }
 
   extend type Mutation {
     createParameter(data: ParameterInput): Parameter
     updateParameter(id: Int, data: ParameterInput): Parameter
     createOrUpdateParameterVote(data: ParameterVoteInput): Question
+    suggestParameter(data: SuggestParameterInput): String
   }
 
   input ParameterInput {
@@ -27,6 +30,7 @@ export const typeDefs = gql`
   }
 
   type ParameterVote {
+    questionAnswer: QuestionAnswer
     parameter: Parameter
     user: User
     vote: Int
@@ -36,6 +40,11 @@ export const typeDefs = gql`
     questionAnswerId: Int
     parameterId: Int
     vote: Int
+  }
+
+  input SuggestParameterInput {
+    parentId: Int
+    name: String
   }
 `;
 
@@ -56,6 +65,12 @@ export const resolvers = {
     parameters: async () => {
       const parameters = await Parameters.query().orderBy('name');
       return parameters.map((parameter) => ({ id: parameter.parameterId }));
+    },
+    parameterCount: async () => {
+      const count: any = await Parameters.query()
+        .count()
+        .first();
+      return count['count(*)'];
     }
   },
 
@@ -79,6 +94,15 @@ export const resolvers = {
       });
       ctx.questionsLoader.clear(questionAnswer.questionId);
       return { id: questionAnswer.questionId };
+    },
+    suggestParameter: async (root, { data }, ctx: Context) => {
+      await ParameterSuggestion.query().insert({
+        name: data.name,
+        parentId: data.parentId,
+        userId: ctx.user.userId
+      });
+
+      return 'Parameter has been suggested';
     }
   }
 };

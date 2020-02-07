@@ -23,6 +23,7 @@ export const typeDefs = gql`
 
   extend type Query {
     questions: [Question]
+    questionCount: Int
   }
 
   extend type Mutation {
@@ -80,6 +81,7 @@ export const resolvers = {
     votes: async ({ id }, _, ctx: Context) => {
       const votes = await QuestionAnswerParameterVote.query().where({ questionAnswerId: id });
       return votes.map((vote) => ({
+        questionAnswer: { id: vote.questionAnswerId },
         parameter: { id: vote.parameterId },
         user: { id: vote.userId },
         vote: vote.vote
@@ -101,6 +103,12 @@ export const resolvers = {
     questions: async () => {
       const questions = await Questions.query();
       return questions.map((question) => ({ id: question.questionId }));
+    },
+    questionCount: async () => {
+      const count: any = await Questions.query()
+        .count()
+        .first();
+      return count['count(*)'];
     }
   },
 
