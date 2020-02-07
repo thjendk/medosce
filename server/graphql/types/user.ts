@@ -6,7 +6,7 @@ export const typeDefs = gql`
   type User {
     id: Int
     username: String!
-    email: String!
+    email: String
     role: Role
   }
 
@@ -75,6 +75,7 @@ export const resolvers = {
 
   Mutation: {
     createUser: async (obj, { data }, ctx: Context, info) => {
+      data.email = data.email ? data.email : null; // Conversion of "" to null
       const newUser = await User.query().insertAndFetch(data);
 
       const token = newUser.signToken();

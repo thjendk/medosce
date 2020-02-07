@@ -110,20 +110,49 @@ export const resolvers = {
       return { id: questionAnswer.questionId };
     },
     suggestParameter: async (root, { data }, ctx: Context) => {
+      let { name, parentId, isForcedSubMenu } = data;
+      name = name.trim().toLowerCase();
+      const userId = ctx.user.userId;
+
+      const suggestions = await ParameterSuggestion.query().where({
+        name,
+        parentId,
+        isForcedSubMenu
+      });
+      const suggestionExistsForUser = suggestions.find(
+        (suggestion) => suggestion.userId === userId
+      );
+
       if (ctx.user.roleId === 1) {
         await Parameters.query().insert({
-          name: data.name,
-          parentId: data.parentId,
-          isForcedSubMenu: data.isForcedSubMenu ? 1 : 0
+          name,
+          parentId,
+          isForcedSubMenu: isForcedSubMenu ? 1 : 0
         });
-      } else {
-        await ParameterSuggestion.query().insert({
-          name: data.name,
-          parentId: data.parentId,
-          userId: ctx.user.userId,
-          isForcedSubMenu: data.isForcedSubMenu ? 1 : 0
-        });
+        return 'Parameter has been added';
       }
+
+      if (suggestionExistsForUser) return 'This has already been suggested';
+      if (suggestions.length >= 2) {
+        await Parameters.query().insert({
+          name,
+          parentId,
+          isForcedSubMenu: isForcedSubMenu ? 1 : 0
+        });
+        await ParameterSuggestion.query()
+          .where({ name, parentId })
+          .delete();
+
+        return 'Enough users has voted for this parameter. It has been added';
+      }
+
+      // If all above fails, the suggestion is just added
+      await ParameterSuggestion.query().insert({
+        name,
+        parentId,
+        userId,
+        isForcedSubMenu: isForcedSubMenu ? 1 : 0
+      });
 
       return 'Parameter has been suggested';
     }

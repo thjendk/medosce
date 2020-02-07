@@ -17,7 +17,7 @@ const QuestionCount: React.SFC<QuestionCountProps> = () => {
   return (
     <EuiText style={{ textAlign: 'center', margin: '1em' }}>
       <p>
-        Vi har ligenu {questionCount} spørgsmål og {parameterCount} parametre.
+        Vi har lige nu {questionCount} spørgsmål og {parameterCount} parametre.
       </p>
     </EuiText>
   );

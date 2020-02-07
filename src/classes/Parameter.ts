@@ -78,16 +78,14 @@ class Parameter {
   };
 
   static suggest = async (data: ParameterInput) => {
-    const state = store.getState();
-
     const mutation = gql`
       mutation SuggestParameter($data: ParameterInput) {
         suggestParameter(data: $data)
       }
     `;
 
-    await Apollo.mutate('suggestParameter', mutation, { data });
-    if (state.auth.user.role.id === 1) {
+    const answer = await Apollo.mutate('suggestParameter', mutation, { data });
+    if (answer.includes('added')) {
       await Parameter.fetchAll();
     }
     return 'Success';
