@@ -83,7 +83,9 @@ const QuestionToolbox: React.SFC<QuestionToolboxProps> = () => {
       <p style={{ textAlign: 'center', fontSize: '13px', color: 'grey', margin: '5px' }}>
         Toolbox
         <br />
-        {withoutParameters.length > 0 && <span>{withoutParameters.length} parametre mangles.</span>}
+        {withoutParameters.length > 0 && (
+          <span style={{ color: 'red' }}>{withoutParameters.length} parametre mangles.</span>
+        )}
       </p>
     </div>
   );

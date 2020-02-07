@@ -1,5 +1,5 @@
-import { store } from 'index';
 import settingsReducer from 'redux/reducers/settings';
+import store from 'config/persistStore';
 
 interface Settings {}
 

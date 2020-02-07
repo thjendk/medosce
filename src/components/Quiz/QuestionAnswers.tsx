@@ -13,6 +13,7 @@ import UserAnswer from 'classes/UserAnswer';
 import Question, { QuestionAnswer } from 'classes/Question';
 import Station from 'classes/Station';
 import 'antd/es/tag/style/css';
+import Parameter from 'classes/Parameter';
 
 export interface QuestionAnswersProps {}
 
@@ -35,9 +36,7 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
   );
   const userAnswerParameterIds = userAnswers.map((userAnswer) => userAnswer.parameterId);
   const user = useSelector((state: ReduxState) => state.auth.user);
-  const userVotes = question.answers.flatMap((answer) =>
-    answer.votes.filter((vote) => vote.user.id === user.id)
-  );
+  const userVotes = question.answers.flatMap((answer) => answer.votes);
 
   const correct = question.answers.filter((questionAnswer) =>
     userAnswers.some((userAnswer) =>
@@ -55,6 +54,10 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
       !answer.parameters.some((parameter) => userAnswerParameterIds.includes(parameter.id))
   );
   const missingAnswersCount = missingAnswers.length;
+
+  const handleVote = async (parameterId, questionAnswerId, vote) => {
+    await Parameter.vote({ parameterId, questionAnswerId, vote });
+  };
 
   const columns = [
     {
@@ -76,12 +79,14 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
                     {' '}
                     <Icon
                       style={{ cursor: 'pointer', color: isUpVoted ? 'green' : null }}
-                      onClick={() => {}}
+                      disabled={isUpVoted}
+                      onClick={() => handleVote(parameter.id, item.id, 1)}
                       name="arrow up"
                     />
                     <Icon
+                      disabled={isDownVoted}
                       style={{ cursor: 'pointer', color: isDownVoted ? 'red' : null }}
-                      onClick={() => {}}
+                      onClick={() => handleVote(parameter.id, item.id, -1)}
                       name="arrow down"
                     />
                   </>

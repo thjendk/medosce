@@ -3,6 +3,7 @@ import { Model } from 'objection';
 interface ParameterSuggestion {
   parameterSuggestionId: number;
   name: string;
+  isForcedSubMenu: 1 | 0;
   parentId: number;
   userId: number;
 }

@@ -1,8 +1,9 @@
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
-import { store } from 'index';
+
 import adminReducer from 'redux/reducers/admin';
 import Station from './Station';
+import store from 'config/persistStore';
 
 interface ExamSet {
   id: number;

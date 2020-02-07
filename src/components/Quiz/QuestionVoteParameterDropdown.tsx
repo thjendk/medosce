@@ -29,6 +29,8 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
   const parameters = useSelector((state: ReduxState) => state.quiz.parameters);
   const parentParameters = parameters.filter((parameter) => !parameter.parent.id);
   const [addingParameterParentId, setAddingParameterParentId] = useState<number>(null);
+  const [addingOverMenu, setAddingOverMenu] = useState(false);
+  const [addingSubMenu, setAddingSubMenu] = useState(false);
 
   const handleVote = async (parameterId: number) => {
     await Question.createOrUpdateVote({ parameterId, questionAnswerId: answerId, vote: 1 });
@@ -36,9 +38,15 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
 
   const handleSuggestParameter = async () => {
     setSuggestLoading(true);
-    await Parameter.suggest({ name: newParameterName, parentId: addingParameterParentId });
+    await Parameter.suggest({
+      name: newParameterName,
+      parentId: addingParameterParentId,
+      isForcedSubMenu: addingSubMenu
+    });
     setNewParameterName('');
     setAddingParameterParentId(null);
+    setAddingOverMenu(false);
+    setAddingSubMenu(false);
     setSuggestLoading(false);
   };
 
@@ -46,7 +54,7 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
     const children = parameters.filter(
       ({ parent }) => parent.id === parameter.id && !alreadyVotedIds.includes(parameter.id)
     );
-    if (children.length < 1) {
+    if (children.length < 1 && !parameter.isForcedSubMenu) {
       return (
         <Menu.Item onClick={() => handleVote(parameter.id)}>
           {parameter.name.toTitleCase()}
@@ -60,13 +68,24 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
         <Menu.Item onClick={() => setAddingParameterParentId(parameter.id)}>
           + Foreslå ny parameter
         </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            setAddingSubMenu(true);
+            setAddingParameterParentId(parameter.id);
+          }}
+        >
+          + Foreslå ny undermenu
+        </Menu.Item>
       </Menu.SubMenu>
     );
   };
 
   return (
     <>
-      <Modal onClose={() => setAddingParameterParentId(null)} open={!!addingParameterParentId}>
+      <Modal
+        onClose={() => setAddingParameterParentId(null)}
+        open={!!addingParameterParentId || addingOverMenu}
+      >
         <Modal.Header>
           Du er ved at tilføje en ny parameter under "
           {parameters
@@ -109,7 +128,7 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
             <Menu forceSubMenuRender>
               {parentParameters.map((parameter) => createChildren(parameter))}
               <Menu.Divider />
-              <Menu.Item>+ Foreslå ny overmenu</Menu.Item>
+              <Menu.Item onClick={() => setAddingOverMenu(true)}>+ Foreslå menu</Menu.Item>
               <Menu.Item>Foreslå anden rettelse</Menu.Item>
             </Menu>
           }

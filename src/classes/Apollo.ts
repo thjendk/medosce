@@ -1,4 +1,4 @@
-import client from 'apolloClient';
+import client from 'config/apolloClient';
 
 class Apollo {
   static query = async <T>(name: string, query: any, variables?: { [key: string]: any }) => {

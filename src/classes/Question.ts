@@ -1,4 +1,3 @@
-import { store } from 'index';
 import quizReducer from 'redux/reducers/quiz';
 import { gql } from 'apollo-boost';
 import Apollo from './Apollo';
@@ -7,6 +6,7 @@ import Station from './Station';
 import Parameter from './Parameter';
 import User from './User';
 import selectionReducer from 'redux/reducers/selection';
+import store from 'config/persistStore';
 
 interface Question {
   id: number;

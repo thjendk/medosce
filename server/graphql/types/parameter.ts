@@ -10,6 +10,7 @@ export const typeDefs = gql`
     id: Int
     name: String
     parent: Parameter
+    isForcedSubMenu: Boolean
   }
 
   extend type Query {
@@ -21,12 +22,13 @@ export const typeDefs = gql`
     createParameter(data: ParameterInput): Parameter
     updateParameter(id: Int, data: ParameterInput): Parameter
     createOrUpdateParameterVote(data: ParameterVoteInput): Question
-    suggestParameter(data: SuggestParameterInput): String
+    suggestParameter(data: ParameterInput): String
   }
 
   input ParameterInput {
     name: String
-    categoryIds: [Int]
+    parentId: Int
+    isForcedSubMenu: Boolean
   }
 
   type ParameterVote {
@@ -41,11 +43,6 @@ export const typeDefs = gql`
     parameterId: Int
     vote: Int
   }
-
-  input SuggestParameterInput {
-    parentId: Int
-    name: String
-  }
 `;
 
 export const resolvers = {
@@ -58,6 +55,10 @@ export const resolvers = {
     parent: async ({ id }, _, ctx: Context) => {
       const parameter = await ctx.parametersLoader.load(id);
       return { id: parameter.parentId };
+    },
+    isForcedSubMenu: async ({ id }, _, ctx: Context) => {
+      const parameter = await ctx.parametersLoader.load(id);
+      return !!parameter.isForcedSubMenu;
     }
   },
 
@@ -85,22 +86,44 @@ export const resolvers = {
     },
     createOrUpdateParameterVote: async (root, { data }, ctx: Context) => {
       const { parameterId, questionAnswerId, vote } = data;
-      const questionAnswer = await QuestionAnswer.query().findOne({ questionAnswerId });
-      await QuestionAnswerParameterVote.query().insertAndFetch({
+      const userId = ctx.user.userId;
+      const exists = await QuestionAnswerParameterVote.query().findOne({
         questionAnswerId,
         parameterId,
-        vote,
-        userId: ctx.user.userId
+        userId
       });
-      ctx.questionsLoader.clear(questionAnswer.questionId);
+
+      if (exists) {
+        await exists.$query().update({
+          vote
+        });
+      } else {
+        await QuestionAnswerParameterVote.query().insert({
+          questionAnswerId,
+          parameterId,
+          vote,
+          userId
+        });
+      }
+
+      const questionAnswer = await QuestionAnswer.query().findOne({ questionAnswerId });
       return { id: questionAnswer.questionId };
     },
     suggestParameter: async (root, { data }, ctx: Context) => {
-      await ParameterSuggestion.query().insert({
-        name: data.name,
-        parentId: data.parentId,
-        userId: ctx.user.userId
-      });
+      if (ctx.user.roleId === 1) {
+        await Parameters.query().insert({
+          name: data.name,
+          parentId: data.parentId,
+          isForcedSubMenu: data.isForcedSubMenu ? 1 : 0
+        });
+      } else {
+        await ParameterSuggestion.query().insert({
+          name: data.name,
+          parentId: data.parentId,
+          userId: ctx.user.userId,
+          isForcedSubMenu: data.isForcedSubMenu ? 1 : 0
+        });
+      }
 
       return 'Parameter has been suggested';
     }
