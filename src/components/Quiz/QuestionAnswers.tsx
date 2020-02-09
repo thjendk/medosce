@@ -102,7 +102,11 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
     },
     {
       name: 'Description',
-      render: (item) => <p style={{ textAlign: 'left' }}>{item.value}</p>
+      render: (item) => (
+        <div>
+          <pre style={{ textAlign: 'left' }}>{item.value}</pre>
+        </div>
+      )
     },
     {
       name: 'Points',
@@ -138,11 +142,9 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={correct} />
         )}
         <StyledDivider small />
-        {missingAnswers.length < 1 && !showMissing && (
-          <Button size="tiny" basic onClick={() => setShowMissing(!showMissing)}>
-            {showMissing ? 'Skjul' : 'Vis'} manglende
-          </Button>
-        )}
+        <Button size="tiny" basic onClick={() => setShowMissing(!showMissing)}>
+          {showMissing ? 'Skjul' : 'Vis'} manglende
+        </Button>
         {showMissing && (
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={missingAnswers} />
         )}

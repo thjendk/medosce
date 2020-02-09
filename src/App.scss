@@ -1,4 +1,4 @@
-@import "~semantic-ui-css/semantic.min.css";
+@import '~semantic-ui-css/semantic.min.css';
 @import '../node_modules/@elastic/eui/src/theme_light.scss';
 
 .ui.container {
@@ -12,4 +12,10 @@
   &.button.blue.basic {
     border-color: #004687 !important;
   }
+}
+
+pre {
+  white-space: pre-wrap;
+  font: inherit;
+  margin-right: 5px;
 }
