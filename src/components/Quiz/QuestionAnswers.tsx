@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Divider, Button, Icon } from 'semantic-ui-react';
+import { Divider, Button, Icon, Popup } from 'semantic-ui-react';
 import { ReduxState } from 'redux/reducers';
 import { useSelector } from 'react-redux';
 import { EuiInMemoryTable, EuiTextArea } from '@elastic/eui';
@@ -12,8 +12,8 @@ import TextAnswer from 'classes/TextAnswer';
 import UserAnswer from 'classes/UserAnswer';
 import Question, { QuestionAnswer } from 'classes/Question';
 import Station from 'classes/Station';
-import 'antd/es/tag/style/css';
 import Parameter from 'classes/Parameter';
+import 'antd/es/tag/style/css';
 
 export interface QuestionAnswersProps {}
 
@@ -59,6 +59,22 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
     await Parameter.vote({ parameterId, questionAnswerId, vote });
   };
 
+  const getParentParameterName = (parentId: number) => {
+    if (!parentId) return '';
+    const parameter = parameters.find((parameter) => parameter.id === parentId);
+    return `${getParentParameterName(parameter.parent.id) + parameter.name.toTitleCase()} ➜ `;
+  };
+
+  const handleNextQuestion = () => {
+    TextAnswer.answer({ questionId: question.id, text });
+    UserAnswer.submitAnswers();
+    Question.nextQuestion(station.id);
+  };
+
+  const handleNextStation = () => {
+    Station.changeStationIndex(stationIndex + 1);
+  };
+
   const columns = [
     {
       name: 'Parameters',
@@ -73,27 +89,35 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
             const voteSum = votes.reduce((sum, vote) => (sum += vote.vote), 0);
 
             return (
-              <Tag style={{ marginTop: '5px' }}>
-                {parameter.name.toTitleCase()}
-                {user && (
-                  <>
-                    {' '}
-                    <Icon
-                      disabled={isUpVoted}
-                      style={{ cursor: 'pointer', color: isUpVoted ? 'green' : null }}
-                      onClick={() => handleVote(parameter.id, item.id, 1)}
-                      name="arrow up"
-                    />
-                    <Icon
-                      disabled={isDownVoted}
-                      style={{ cursor: 'pointer', color: isDownVoted ? 'red' : null }}
-                      onClick={() => handleVote(parameter.id, item.id, -1)}
-                      name="arrow down"
-                    />
-                  </>
-                )}
-                {voteSum}
-              </Tag>
+              <Popup
+                size="mini"
+                position="top center"
+                trigger={
+                  <Tag style={{ marginTop: '5px' }}>
+                    {parameter.name.toTitleCase()}
+                    {user && (
+                      <>
+                        {' '}
+                        <Icon
+                          disabled={isUpVoted}
+                          style={{ cursor: 'pointer', color: isUpVoted ? 'green' : null }}
+                          onClick={() => handleVote(parameter.id, item.id, 1)}
+                          name="arrow up"
+                        />
+                        <Icon
+                          disabled={isDownVoted}
+                          style={{ cursor: 'pointer', color: isDownVoted ? 'red' : null }}
+                          onClick={() => handleVote(parameter.id, item.id, -1)}
+                          name="arrow down"
+                        />
+                      </>
+                    )}
+                    {voteSum}
+                  </Tag>
+                }
+              >
+                {getParentParameterName(parameter.parent.id) + parameter.name.toTitleCase()}
+              </Popup>
             );
           })}
           {user && <QuestionVoteParameterDropdown answerId={item.id} />}
@@ -113,16 +137,6 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
       field: 'point'
     }
   ];
-
-  const handleNextQuestion = () => {
-    TextAnswer.answer({ questionId: question.id, text });
-    UserAnswer.submitAnswers();
-    Question.nextQuestion(station.id);
-  };
-
-  const handleNextStation = () => {
-    Station.changeStationIndex(stationIndex + 1);
-  };
 
   return (
     <div>
