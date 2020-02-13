@@ -84,8 +84,13 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
             const votes = userVotes.filter(
               (vote) => vote.parameter.id === parameter.id && item.id === vote.questionAnswer.id
             );
-            const isUpVoted = votes.find((vote) => vote.user.id === user.id)?.vote === 1;
-            const isDownVoted = votes.find((vote) => vote.user.id === user.id)?.vote === -1;
+
+            const isUpVoted = user
+              ? votes.find((vote) => vote.user.id === user.id)?.vote === 1
+              : false;
+            const isDownVoted = user
+              ? votes.find((vote) => vote.user.id === user.id)?.vote === -1
+              : false;
             const voteSum = votes.reduce((sum, vote) => (sum += vote.vote), 0);
 
             return (
@@ -110,9 +115,9 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
                           onClick={() => handleVote(parameter.id, item.id, -1)}
                           name="arrow down"
                         />
+                        {voteSum}
                       </>
                     )}
-                    {voteSum}
                   </Tag>
                 }
               >
