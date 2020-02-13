@@ -154,20 +154,21 @@ const QuestionAnswers: React.SFC<QuestionAnswersProps> = () => {
         disabled={missingAnswersCount === 0 || questionIndex > currentQuestionIndex}
       />
       <QuestionMeta />
+      <Divider />
       <div style={{ textAlign: 'center' }}>
-        <p style={{ fontSize: '14px' }}>Du mangler {missingAnswersCount} værdier.</p>
-        <Divider />
         {correct.length > 0 && (
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={correct} />
         )}
         <StyledDivider small />
-        <Button size="tiny" basic onClick={() => setShowMissing(!showMissing)}>
-          {showMissing ? 'Skjul' : 'Vis'} manglende
-        </Button>
+        {(missingAnswersCount > 0 || showMissing) && (
+          <Button size="tiny" basic onClick={() => setShowMissing(!showMissing)}>
+            {showMissing ? 'Skjul' : 'Vis'} manglende ({missingAnswersCount})
+          </Button>
+        )}
         {showMissing && (
           <EuiInMemoryTable tableLayout="auto" columns={columns} items={missingAnswers} />
         )}
-        <Divider />
+        <Divider hidden />
       </div>
       Giver ikke point:{' '}
       {wrong.map((answer) => (

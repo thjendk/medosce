@@ -13,7 +13,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
   version: 11,
   migrate: createMigrate(migrations),
-  blacklist: ['auth']
+  blacklist: ['auth', 'quiz']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
