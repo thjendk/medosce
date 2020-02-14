@@ -1,14 +1,16 @@
-import React, { useContext, useState } from 'react';
-import { Dropdown, Menu, Tag, Input } from 'antd';
-import { useSelector } from 'react-redux';
-import { ReduxState } from 'redux/reducers';
-import Parameter from 'classes/Parameter';
-import Question from 'classes/Question';
-import { QuestionIdContext } from './Station';
 import 'antd/es/dropdown/style/css';
 import 'antd/es/menu/style/css';
 import 'antd/es/input/style/css';
-import { Modal, Button } from 'semantic-ui-react';
+
+import { Dropdown, Input, Menu, Tag } from 'antd';
+import Parameter from 'classes/Parameter';
+import Question from 'classes/Question';
+import React, { useContext, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { ReduxState } from 'redux/reducers';
+import { Button, Modal } from 'semantic-ui-react';
+
+import { QuestionIdContext } from './Station';
 
 export interface QuestionVoteParameterDropdownProps {
   answerId: number;
@@ -112,7 +114,10 @@ const QuestionVoteParameterDropdown: React.SFC<QuestionVoteParameterDropdownProp
           </Button>
           <Button
             disabled={suggestLoading}
-            onClick={() => setAddingParameterParentId(null)}
+            onClick={() => {
+              setAddingParameterParentId(null);
+              setAddingOverMenu(false);
+            }}
             basic
             color="black"
           >
