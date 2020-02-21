@@ -6,4 +6,4 @@ const batchExamSets = async (ids: number[]) => {
   return ids.map((id) => examSets.find((examSet) => examSet.examSetId === id));
 };
 
-export const examSetLoader = new DataLoader((ids: number[]) => batchExamSets(ids));
+export const examSetLoader = () => new DataLoader((ids: number[]) => batchExamSets(ids));

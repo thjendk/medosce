@@ -6,4 +6,4 @@ const batchParameters = async (ids: number[]) => {
   return ids.map((id) => parameters.find((parameter) => parameter.parameterId === id));
 };
 
-export const parametersLoader = new DataLoader((ids: number[]) => batchParameters(ids));
+export const parametersLoader = () => new DataLoader((ids: number[]) => batchParameters(ids));

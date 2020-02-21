@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader';
-import Questions from 'models/questions.model';
 import QuestionAnswer from 'models/questionAnswer.model';
+import Questions from 'models/questions.model';
 
 const batchQuestions = async (ids: number[]) => {
   const questions = await Questions.query().findByIds(ids);
@@ -13,5 +13,6 @@ const batchQuestionAnswers = async (ids: number[]) => {
   );
 };
 
-export const questionsLoader = new DataLoader((ids: number[]) => batchQuestions(ids));
-export const questionAnswerLoader = new DataLoader((ids: number[]) => batchQuestionAnswers(ids));
+export const questionsLoader = () => new DataLoader((ids: number[]) => batchQuestions(ids));
+export const questionAnswerLoader = () =>
+  new DataLoader((ids: number[]) => batchQuestionAnswers(ids));
