@@ -10,6 +10,7 @@
     "@reduxjs/toolkit": "^1.2.1",
     "antd": "^3.26.8",
     "apollo-boost": "^0.4.7",
+    "apollo-link-retry": "^2.2.15",
     "apollo-server-express": "^2.9.15",
     "bcrypt": "^3.0.7",
     "cookie-parser": "^1.4.4",

@@ -10,7 +10,7 @@ const LoadingPage: React.SFC<LoadingPageProps> = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsTimedOut(true);
-    }, 3000);
+    }, 1000 * 7);
   }, []);
 
   return (
